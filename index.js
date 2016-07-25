@@ -1,12 +1,15 @@
+
 var AWS = require('aws-sdk');
 var url = require('url');
 var https = require('https');
 var hookUrl, kmsEncyptedHookUrl, slackChannel;
 
-
 // mandatory configuration
-slackChannel = '#ops';
-kmsEncyptedHookUrl = '<kmsEncyptedHookUrl>';  // Enter the base-64 encoded, encrypted key (CiphertextBlob)
+kmsEncyptedHookUrl = '<kmsEncryptedHookUrl>'
+
+unencryptedHookUrl = null
+
+slackChannel = '#dev';  // Enter the Slack channel to send a message to
 
 // optional configuration
 var slackUsername = null
@@ -192,6 +195,12 @@ exports.handler = function(event, context) {
     if (hookUrl) {
         // Container reuse, simply process the event with the key in memory
         processEvent(event, context);
+
+    } else if (unencryptedHookUrl) {
+
+        hookUrl = unencryptedHookUrl;
+        processEvent(event, context);
+
     } else if (kmsEncyptedHookUrl && kmsEncyptedHookUrl !== '<kmsEncryptedHookUrl>') {
 
         var encryptedBuf = new Buffer(kmsEncyptedHookUrl, 'base64');
