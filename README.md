@@ -2,7 +2,7 @@
 
 An [AWS Lambda](http://aws.amazon.com/lambda/) function for better Slack notifications.
 
-[![BuildStatus](https://travis-ci.org/motdotla/lambda-cloudwatch-slack.png?branch=master)](https://travis-ci.org/assertible/lambda-cloudwatch-slack)
+[![BuildStatus](https://travis-ci.org/assertible/lambda-cloudwatch-slack.png?branch=master)](https://travis-ci.org/assertible/lambda-cloudwatch-slack)
 [![NPM version](https://badge.fury.io/js/lambda-cloudwatch-slack.png)](http://badge.fury.io/js/lambda-cloudwatch-slack)
 
 
