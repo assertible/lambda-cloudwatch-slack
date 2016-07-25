@@ -1,0 +1,18 @@
+{
+    "Records": [
+        {
+            "EventSource": "aws:sns",
+            "EventVersion": "1.0",
+            "EventSubscriptionArn": "arn:aws:sns:us-west-2:123456789123:ElasticBeanstalkNotifications-Environment-app-staging:00000000-0000-0000-0000-000000000000",
+            "Sns": {
+                "Type": "Notification",
+                "MessageId": "00000000-0000-0000-0000-000000000000",
+                "TopicArn": "arn:aws:sns:us-west-2:123456789123:ElasticBeanstalkNotifications-Environment-app-staging",
+                "Subject": "ALARM: \"awsrds-app-High-DB-Connections\" in US West - Oregon",
+                "Message": "{\"AlarmName\":\"awsrds-app-High-DB-Connections\",\"AlarmDescription\":null,\"AWSAccountId\":\"123456789123\",\"NewStateValue\":\"ALARM\",\"NewStateReason\":\"Threshold Crossed: 1 datapoint (10.0) was greater than or equal to the threshold (10.0).\",\"StateChangeTime\":\"2016-07-24T22:05:19.737+0000\",\"Region\":\"US West - Oregon\",\"OldStateValue\":\"OK\",\"Trigger\":{\"MetricName\":\"DatabaseConnections\",\"Namespace\":\"AWS/RDS\",\"Statistic\":\"AVERAGE\",\"Unit\":null,\"Dimensions\":[{\"name\":\"DBInstanceIdentifier\",\"value\":\"app\"}],\"Period\":300,\"EvaluationPeriods\":1,\"ComparisonOperator\":\"GreaterThanOrEqualToThreshold\",\"Threshold\":10.0}}"
+                , "MessageAttributes": {}
+            }
+
+        }
+    ]
+}
