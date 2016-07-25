@@ -1,5 +1,5 @@
 {
-  "name": "lambda-cloudwatch-to-slack",
+  "name": "lambda-cloudwatch-slack",
   "version": "0.0.1",
   "description": "",
   "authors": [
