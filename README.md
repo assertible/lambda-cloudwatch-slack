@@ -30,12 +30,22 @@ make test
 
 ## Configuration
 
-### 1. Setup AWS environment
+
+### 1. Configure AWS environment
 
 Fill in the variables at the top of the `Makefile`
 
+For example, your variables may look like this:
 
-### 2. Setup Lambda script
+```
+LAMBDA_FUNCTION_NAME=cloudwatch-to-slack
+AWS_REGION=us-west-2
+AWS_ROLE=arn:aws:iam::123456789123:role/lambda_exec_role
+AWS_PROFILE=myprofile
+```
+
+
+### 2. Configure AWS Lambda script
 
 At the top of the `index.js` file, there are two sections:
 
