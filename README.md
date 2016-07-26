@@ -1,6 +1,7 @@
 # lambda-cloudwatch-slack
 
-An [AWS Lambda](http://aws.amazon.com/lambda/) function for better Slack notifications.
+An [AWS Lambda](http://aws.amazon.com/lambda/) function for better
+Slack notifications.
 
 [![BuildStatus](https://travis-ci.org/assertible/lambda-cloudwatch-slack.png?branch=master)](https://travis-ci.org/assertible/lambda-cloudwatch-slack)
 [![NPM version](https://badge.fury.io/js/lambda-cloudwatch-slack.png)](http://badge.fury.io/js/lambda-cloudwatch-slack)
@@ -12,25 +13,27 @@ This function was originally derived from the AWS blueprint named
 `cloudwatch-alarm-to-slack`. The function in this repo improves on the
 default blueprint in several ways:
 
-1. Better default formatting
+**Better default formatting:**
 
-    [![AWS Cloud Notification for Slack](https://github.com/assertible/lambda-cloudwatch-slack/raw/master/images/cloudwatch.png)](https://assertible.com)
+![AWS Cloud Notification for Slack](https://github.com/assertible/lambda-cloudwatch-slack/raw/master/images/cloudwatch.png)
 
-2. Basic support for notifications from Elastic Beanstalk
+**Basic support for notifications from Elastic Beanstalk:**
 
-    [![Elastic Beanstalk Slack Notifications](https://github.com/assertible/lambda-cloudwatch-slack/raw/master/images/elastic-beanstalk.png)](https://assertible.com)
+![Elastic Beanstalk Slack Notifications](https://github.com/assertible/lambda-cloudwatch-slack/raw/master/images/elastic-beanstalk.png)
 
-3. Support for encrypted and unencrypted Slack webhook url
+**Support for encrypted and unencrypted Slack webhook url:**
 
 
 ## Configuration
 
+Clone this repository and open the Makefile in your editor, then follow
+the steps beow:
+
 
 ### 1. Configure AWS environment
 
-Fill in the variables at the top of the `Makefile`
-
-For example, your variables may look like this:
+Fill in the variables at the top of the `Makefile`. For example, your
+variables may look like this:
 
 ```
 LAMBDA_FUNCTION_NAME=cloudwatch-to-slack
@@ -47,22 +50,26 @@ At the top of the `index.js` file, there are two sections:
 
 #### a. mandatory configuration
 
-Two mandatory configuration
+A hook URL and a `slackChannel` are required configurations. The
+`slackChannel` is the name of the Slack room to send the messages. To
+get the value for the URL, you'll need to set up a Slack hook,
+[as described below](#3-setup-slack-hook).
 
 
 #### b. optional configuration
 
 The variables in the "optional" configuration customize the look and
-text in the Slack notification
+text in the Slack notification; `slackUsername` and `orgIcon` will
+enhance the messages.
 
 
 ### 3. Setup Slack hook
 
 Follow these steps to configure the webhook in Slack:
 
-  1. Navigate to [https://<your-team-domain>.slack.com/services/new]()
-
-  2. Search for and select "Incoming WebHooks".
+  1. Navigate to
+     [https://.slack.com/services/new](https://.slack.com/services/new)
+     and search for and select "Incoming WebHooks".
 
   3. Choose the default channel where messages will be sent and click
      "Add Incoming WebHooks Integration".
@@ -70,7 +77,8 @@ Follow these steps to configure the webhook in Slack:
   4. Copy the webhook URL from the setup instructions and use it in
      the next section.
 
-  5. Click 'Save Settings' at the bottom of the Slack integration page.
+  5. Click 'Save Settings' at the bottom of the Slack integration
+     page.
 
 
 #### Unencrypted hook URL
@@ -82,9 +90,11 @@ kmsEncyptedHookUrl is ignored.
 
 #### Encrypted hook URL
 
-Follow these steps to encrypt your Slack hook URL for use in this function:
+Follow these steps to encrypt your Slack hook URL for use in this
+function:
 
-  1. Create a KMS key - http://docs.aws.amazon.com/kms/latest/developerguide/create-keys.html.
+  1. Create a KMS key -
+     http://docs.aws.amazon.com/kms/latest/developerguide/create-keys.html.
 
   2. Encrypt the event collector token using the AWS CLI.
      $ aws kms encrypt --key-id alias/<KMS key name> --plaintext "<SLACK_HOOK_URL>"
@@ -116,9 +126,15 @@ Follow these steps to encrypt your Slack hook URL for use in this function:
 }
 ```
 
-## Testing
+## Tests
+
+With the variables filled in, you can test the function:
 
 ```
 npm install
 make test
 ```
+
+## License
+
+MIT License
