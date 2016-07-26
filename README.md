@@ -8,8 +8,9 @@ An [AWS Lambda](http://aws.amazon.com/lambda/) function for better Slack notific
 
 ## Overview
 
-This function was originally derived from the AWS blueprint named `cloudwatch-alarm-to-slack`.
-The function in this repo improves on the default blueprint in several ways:
+This function was originally derived from the AWS blueprint named
+`cloudwatch-alarm-to-slack`. The function in this repo improves on the
+default blueprint in several ways:
 
 1. Better default formatting
 
@@ -21,12 +22,6 @@ The function in this repo improves on the default blueprint in several ways:
 
 3. Support for encrypted and unencrypted Slack webhook url
 
-
-## Testing
-
-```
-make test
-```
 
 ## Configuration
 
@@ -65,20 +60,24 @@ text in the Slack notification
 
 Follow these steps to configure the webhook in Slack:
 
-  1. Navigate to https://<your-team-domain>.slack.com/services/new
+  1. Navigate to [https://<your-team-domain>.slack.com/services/new]()
 
   2. Search for and select "Incoming WebHooks".
 
   3. Choose the default channel where messages will be sent and click
      "Add Incoming WebHooks Integration".
 
-  4. Copy the webhook URL from the setup instructions and use it in the next section.
+  4. Copy the webhook URL from the setup instructions and use it in
+     the next section.
+
+  5. Click 'Save Settings' at the bottom of the Slack integration page.
 
 
 #### Unencrypted hook URL
 
-If you don't want or need to encrypt your hook URL, you can use the `unencryptedHookUrl`.
-If this variable is specified, the kmsEncyptedHookUrl is ignored.
+If you don't want or need to encrypt your hook URL, you can use the
+`unencryptedHookUrl`.  If this variable is specified, the
+kmsEncyptedHookUrl is ignored.
 
 
 #### Encrypted hook URL
@@ -90,9 +89,11 @@ Follow these steps to encrypt your Slack hook URL for use in this function:
   2. Encrypt the event collector token using the AWS CLI.
      $ aws kms encrypt --key-id alias/<KMS key name> --plaintext "<SLACK_HOOK_URL>"
 
-     Note: You must exclude the protocol from the URL (e.g. "hooks.slack.com/services/abc123").
+     Note: You must exclude the protocol from the URL
+     (e.g. "hooks.slack.com/services/abc123").
 
-  3. Copy the base-64 encoded, encrypted key (CiphertextBlob) to the ENCRYPTED_HOOK_URL variable.
+  3. Copy the base-64 encoded, encrypted key (CiphertextBlob) to the
+     ENCRYPTED_HOOK_URL variable.
 
   4. Give your function's role permission for the kms:Decrypt action.
      Example:
@@ -113,4 +114,11 @@ Follow these steps to encrypt your Slack hook URL for use in this function:
         }
     ]
 }
+```
+
+## Testing
+
+```
+npm install
+make test
 ```
