@@ -14,11 +14,11 @@ default blueprint in several ways:
 
 1. Better default formatting
 
-    [![AWS Cloud Notification for Slack](./images/cloudwatch.png)](https://assertible.com)
+    [![AWS Cloud Notification for Slack](https://github.com/assertible/lambda-cloudwatch-slack/raw/master/images/cloudwatch.png)](https://assertible.com)
 
 2. Basic support for notifications from Elastic Beanstalk
 
-    [![Elastic Beanstalk Slack Notifications](./images/elastic-beanstalk.png)](https://assertible.com)
+    [![Elastic Beanstalk Slack Notifications](https://github.com/assertible/lambda-cloudwatch-slack/raw/master/images/elastic-beanstalk.png)](https://assertible.com)
 
 3. Support for encrypted and unencrypted Slack webhook url
 

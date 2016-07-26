@@ -24,7 +24,7 @@
       "lambda",
       "slackbot",
       "cloudwatch",
-      "notifications",
+      "notifications"
   ],
   "license": "MIT"
 }
