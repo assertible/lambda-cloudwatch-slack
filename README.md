@@ -2,7 +2,7 @@
 
 An [AWS Lambda](http://aws.amazon.com/lambda/) function for better
 Slack
-notifications. [Check out the blog post](https://assertible.com/blog/npm-package-lambda-cloudwatch-slack)
+notifications. [Check out the blog post](https://assertible.com/blog/npm-package-lambda-cloudwatch-slack).
 
 [![BuildStatus](https://travis-ci.org/assertible/lambda-cloudwatch-slack.png?branch=master)](https://travis-ci.org/assertible/lambda-cloudwatch-slack)
 [![NPM version](https://badge.fury.io/js/lambda-cloudwatch-slack.png)](http://badge.fury.io/js/lambda-cloudwatch-slack)
