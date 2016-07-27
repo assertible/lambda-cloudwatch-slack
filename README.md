@@ -1,7 +1,8 @@
 # lambda-cloudwatch-slack
 
 An [AWS Lambda](http://aws.amazon.com/lambda/) function for better
-Slack notifications.
+Slack
+notifications. [Check out the blog post](https://assertible.com/blog/npm-package-lambda-cloudwatch-slack)
 
 [![BuildStatus](https://travis-ci.org/assertible/lambda-cloudwatch-slack.png?branch=master)](https://travis-ci.org/assertible/lambda-cloudwatch-slack)
 [![NPM version](https://badge.fury.io/js/lambda-cloudwatch-slack.png)](http://badge.fury.io/js/lambda-cloudwatch-slack)
@@ -9,9 +10,10 @@ Slack notifications.
 
 ## Overview
 
-This function was originally derived from the AWS blueprint named
-`cloudwatch-alarm-to-slack`. The function in this repo improves on the
-default blueprint in several ways:
+This function was originally derived from the
+[AWS blueprint named `cloudwatch-alarm-to-slack`](https://aws.amazon.com/blogs/aws/new-slack-integration-blueprints-for-aws-lambda/). The
+function in this repo improves on the default blueprint in several
+ways:
 
 **Better default formatting:**
 
