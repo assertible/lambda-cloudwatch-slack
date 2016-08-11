@@ -84,8 +84,8 @@ var handleElasticBeanstalk = function(event, context) {
     attachments: [
       {
         "fields": [
-          { "title": "Subject", "value": event.Records[0].Sns.Subject},
-          { "title": "Message", "value": message}
+          { "title": "Subject", "value": event.Records[0].Sns.Subject, "short": false},
+          { "title": "Message", "value": message, "short": false}
         ],
         "color": color,
         "ts":  timestamp
@@ -115,12 +115,13 @@ var handleCodeDeploy = function(event, context) {
       {
         "color": color,
         "fields": [
-          { "title": "Message", "value": snsSubject },
+          { "title": "Message", "value": snsSubject, "short": false },
           { "title": "Deployment Group", "value": message.deploymentGroupName, "short": true },
           { "title": "Application", "value": message.applicationName, "short": true },
           {
             "title": "Status Link",
-            "value": "https://console.aws.amazon.com/codedeploy/home?region=" + message.region + "#/deployments/" + message.deploymentId
+            "value": "https://console.aws.amazon.com/codedeploy/home?region=" + message.region + "#/deployments/" + message.deploymentId,
+            "short": false
           }
         ],
         "ts": timestamp
@@ -153,7 +154,8 @@ var handleElasticache = function(event, context) {
           { "title": "Node", "value": nodename, "short": true },
           {
             "title": "Link to cache node",
-            "value": "https://console.aws.amazon.com/elasticache/home?region=" + config.region + "#cache-nodes:id=" + nodename + ";nodes"
+            "value": "https://console.aws.amazon.com/elasticache/home?region=" + config.region + "#cache-nodes:id=" + nodename + ";nodes",
+            "short": false
           }
         ],
         "ts": timestamp
@@ -189,7 +191,7 @@ var handleCloudWatch = function(event, context) {
         "color": color,
         "fields": [
           { "title": "Alarm Name", "value": alarmName, "short": true },
-          { "title": "Alarm Description", "value": alarmReason},
+          { "title": "Alarm Description", "value": alarmReason, "short": false},
           {
             "title": "Trigger",
             "value": trigger.Statistic + " "
@@ -197,13 +199,15 @@ var handleCloudWatch = function(event, context) {
               + trigger.ComparisonOperator + " "
               + trigger.Threshold + " for "
               + trigger.EvaluationPeriods + " period(s) of "
-              + trigger.Period + " seconds."
+              + trigger.Period + " seconds.",
+              "short": false
           },
           { "title": "Old State", "value": oldState, "short": true },
           { "title": "Current State", "value": newState, "short": true },
           {
             "title": "Link to Alarm",
-            "value": "https://console.aws.amazon.com/cloudwatch/home?region=" + config.region + "#alarm:alarmFilter=ANY;name=" + alarmName
+            "value": "https://console.aws.amazon.com/cloudwatch/home?region=" + config.region + "#alarm:alarmFilter=ANY;name=" + alarmName,
+            "short": false
           }
         ],
         "ts":  timestamp
