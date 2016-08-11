@@ -1,0 +1,18 @@
+{
+  "Records": [
+    {
+      "EventSource": "aws:sns",
+      "EventVersion": "1.0",
+      "EventSubscriptionArn": "arn:aws:sns:us-east-1:123456789123:CodeDeployNotifications:00000000-0000-0000-0000-000000000000",
+      "Sns": {
+        "Type": "Notification",
+        "MessageId": "00000000-0000-0000-0000-000000000000",
+        "TopicArn": "arn:aws:sns:us-east-1:123456789:CodeDeployNotifications",
+        "Subject": "SUCCEEDED: AWS CodeDeploy d-123ABC456 in us-east-1 to your-application-name",
+        "Message": "{\"region\":\"us-east-1\",\"accountId\":\"123456789\",\"eventTriggerName\":\"notify team\",\"applicationName\":\"your-application-name\",\"deploymentId\":\"d-123ABC456\",\"deploymentGroupName\":\"your-application-name-group\",\"createTime\":\"Wed Aug 10 18:39:05 UTC 2016\",\"completeTime\":\"Wed Aug 10 18:40:33 UTC 2016\",\"deploymentOverview\":\"{\\\"Succeeded\\\":1,\\\"Failed\\\":0,\\\"Skipped\\\":0,\\\"InProgress\\\":0,\\\"Pending\\\":0}\",\"status\":\"SUCCEEDED\"}",
+        "Timestamp": "2016-08-10T19:12:12.411Z",
+        "MessageAttributes": {}
+      }
+    }
+  ]
+}

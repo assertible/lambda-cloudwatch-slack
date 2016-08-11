@@ -210,7 +210,6 @@ var handleCloudWatch = function(event, context) {
       }
     ]
   };
-
   return _.merge(baseSlackMessage, slackMessage);
 };
 
