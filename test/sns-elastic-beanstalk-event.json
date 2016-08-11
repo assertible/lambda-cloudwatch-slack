@@ -3,12 +3,12 @@
     {
       "Sns": {
         "MessageAttributes": null,
-        "UnsubscribeUrl": "https:\/\/sns.us-west-2.amazonaws.com\/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-west-2:123456789123:ElasticBeanstalkNotifications-Environment-app-staging:00000000-0000-0000-0000-000000000000",
         "Message": "Timestamp: Sun Jul 24 20:37:10 UTC 2016\nMessage: Environment health has transitioned from Ok to Degraded. 5.0 % of the requests are failing with HTTP 5xx.\n\nEnvironment: retsd-staging-1\nApplication: retsd\n\nEnvironment URL: http:\/\/app-staging.us-west-2.elasticbeanstalk.com\nNotificationProcessId: 00000000-0000-0000-0000-000000000000",
         "Subject": "AWS Elastic Beanstalk Notification - Environment health has transitioned from Ok to Degraded. 5.0...",
         "TopicArn": "arn:aws:sns:us-west-2:123456789:ElasticBeanstalkNotifications-Environment-app-staging",
         "MessageId": "00000000-0000-0000-0000-000000000000",
-        "Type": "Notification"
+        "Type": "Notification",
+        "Timestamp": "2016-08-11T07:24:05.959Z"
       },
       "EventSubscriptionArn": "arn:aws:sns:us-west-2:123456789123:ElasticBeanstalkNotifications-Environment-app-staging:00000000-0000-0000-0000-000000000000",
       "EventVersion": "1.0",

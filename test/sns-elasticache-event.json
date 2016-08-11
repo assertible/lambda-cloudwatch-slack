@@ -1,0 +1,18 @@
+{
+  "Records": [
+    {
+      "EventSource": "aws:sns",
+      "EventVersion": "1.0",
+      "EventSubscriptionArn": "arn:aws:sns:us-east-1:123456789123:ElasticacheNotifications:00000000-0000-0000-0000-000000000000",
+      "Sns": {
+        "Type": "Notification",
+        "MessageId": "7f660149-f0b8-53a4-83c5-516fdaed6a4b",
+        "TopicArn": "arn:aws:sns:us-east-1:123456789123:ElasticacheNotifications",
+        "Subject": null,
+        "Message": "{\"ElastiCache:ElasticacheEvent\":\"nodename\"}",
+        "Timestamp": "2016-08-11T07:24:05.959Z",
+        "MessageAttributes": {}
+      }
+    }
+  ]
+}
