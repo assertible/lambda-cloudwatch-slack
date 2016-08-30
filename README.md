@@ -15,13 +15,21 @@ This function was originally derived from the
 function in this repo improves on the default blueprint in several
 ways:
 
-**Better default formatting:**
+**Better default formatting for CloudWatch notifications:**
 
 ![AWS Cloud Notification for Slack](https://github.com/assertible/lambda-cloudwatch-slack/raw/master/images/cloudwatch.png)
 
-**Basic support for notifications from Elastic Beanstalk:**
+**Support for notifications from Elastic Beanstalk:**
 
 ![Elastic Beanstalk Slack Notifications](https://github.com/assertible/lambda-cloudwatch-slack/raw/master/images/elastic-beanstalk.png)
+
+**Support for notifications from Code Deploy:**
+
+![AWS CodeDeploy Notifications](https://github.com/assertible/lambda-cloudwatch-slack/raw/master/images/code-deploy.png)
+
+**Basic support for notifications from ElastiCache:**
+
+![AWS ElastiCache Notifications](https://github.com/assertible/lambda-cloudwatch-slack/raw/master/images/elasticache.png)
 
 **Support for encrypted and unencrypted Slack webhook url:**
 
