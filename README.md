@@ -47,8 +47,8 @@ AWS_PROFILE=myprofile
 
 ### 2. Configure AWS Lambda script
 
-Next, open `config.js`. there are several mandatory and optional configuration options. We've tried
-to choose a good set of defaults:
+Next, open `config.js`. there are several mandatory and optional
+configuration options. We've tried to choose a good set of defaults:
 
 
 #### a. mandatory configuration
