@@ -47,7 +47,8 @@ AWS_PROFILE=myprofile
 
 ### 2. Configure AWS Lambda script
 
-At the top of the `index.js` file, there are two sections:
+Next, open `config.js`. there are several mandatory and optional configuration options. We've tried
+to choose a good set of defaults:
 
 
 #### a. mandatory configuration
@@ -57,12 +58,19 @@ A hook URL and a `slackChannel` are required configurations. The
 get the value for the URL, you'll need to set up a Slack hook,
 [as described below](#3-setup-slack-hook).
 
+To configure a proper Slack webhook URL, either the
+`kmsEncyptedHookUrl` or `unencryptedHookUrl` needs to be filled
+out. `kmsEncyptedHookUrl` uses the AWS KMS encryption service. See the
+documentation below for more details
+([unencrypted hook url](#unencrypted-hook-url) &
+[encrypted hook url](#encrypted-hook-url))
+
 
 #### b. optional configuration
 
-The variables in the "optional" configuration customize the look and
-text in the Slack notification; `slackUsername` and `orgIcon` will
-enhance the messages.
+All other configuration options are "optional". Some customize the
+look and text in the Slack notification; `slackUsername` and `orgIcon`
+will enhance the messages appearance.
 
 
 ### 3. Setup Slack hook
