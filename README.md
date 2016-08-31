@@ -15,13 +15,21 @@ This function was originally derived from the
 function in this repo improves on the default blueprint in several
 ways:
 
-**Better default formatting:**
+**Better default formatting for CloudWatch notifications:**
 
 ![AWS Cloud Notification for Slack](https://github.com/assertible/lambda-cloudwatch-slack/raw/master/images/cloudwatch.png)
 
-**Basic support for notifications from Elastic Beanstalk:**
+**Support for notifications from Elastic Beanstalk:**
 
 ![Elastic Beanstalk Slack Notifications](https://github.com/assertible/lambda-cloudwatch-slack/raw/master/images/elastic-beanstalk.png)
+
+**Support for notifications from Code Deploy:**
+
+![AWS CodeDeploy Notifications](https://github.com/assertible/lambda-cloudwatch-slack/raw/master/images/code-deploy.png)
+
+**Basic support for notifications from ElastiCache:**
+
+![AWS ElastiCache Notifications](https://github.com/assertible/lambda-cloudwatch-slack/raw/master/images/elasticache.png)
 
 **Support for encrypted and unencrypted Slack webhook url:**
 
@@ -47,7 +55,8 @@ AWS_PROFILE=myprofile
 
 ### 2. Configure AWS Lambda script
 
-At the top of the `index.js` file, there are two sections:
+Next, open `config.js`. there are several mandatory and optional
+configuration options. We've tried to choose a good set of defaults:
 
 
 #### a. mandatory configuration
@@ -57,12 +66,19 @@ A hook URL and a `slackChannel` are required configurations. The
 get the value for the URL, you'll need to set up a Slack hook,
 [as described below](#3-setup-slack-hook).
 
+To configure a proper Slack webhook URL, either the
+`kmsEncyptedHookUrl` or `unencryptedHookUrl` needs to be filled
+out. `kmsEncyptedHookUrl` uses the AWS KMS encryption service. See the
+documentation below for more details
+([unencrypted hook url](#unencrypted-hook-url) &
+[encrypted hook url](#encrypted-hook-url))
+
 
 #### b. optional configuration
 
-The variables in the "optional" configuration customize the look and
-text in the Slack notification; `slackUsername` and `orgIcon` will
-enhance the messages.
+All other configuration options are "optional". Some customize the
+look and text in the Slack notification; `slackUsername` and `orgIcon`
+will enhance the messages appearance.
 
 
 ### 3. Setup Slack hook
