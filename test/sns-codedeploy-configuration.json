@@ -1,0 +1,18 @@
+{
+    "Records": [
+        {
+            "EventSource": "aws:sns",
+            "EventVersion": "1.0",
+            "EventSubscriptionArn": "arn:aws:sns:us-east-1:123456789123:CodeDeployNotifications:00000000-0000-0000-0000-000000000000",
+            "Sns": {
+                "Type": "Notification",
+                "MessageId": "00000000-0000-0000-0000-000000000000",
+                "TopicArn": "arn:aws:sns:us-east-1:123456789:CodeDeployNotifications",
+                "Subject": "SUCCESS: AWS CodeDeploy notification setup for trigger CodeDeployNotifications",
+                "Message": "Your AWS CodeDeploy trigger arn:aws:sns:us-east-1:123456789123:CodeDeployNotifications is able to send notifications for the SNS topic you specified.\nAll subscribers to the topic will receive notifications related to the events you specified for this trigger.\nThank you,\nThe AWS CodeDeploy Service Team",
+                "Timestamp": "2016-09-15T16:46:11.645Z",                
+                "MessageAttributes": {}
+            }
+        }
+    ]
+}

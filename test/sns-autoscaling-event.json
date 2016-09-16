@@ -1,0 +1,18 @@
+{
+    "Records": [
+        {
+            "EventSource": "aws:sns",
+            "EventVersion": "1.0",
+            "EventSubscriptionArn": "arn:aws:sns:us-east-1:123456789123:AutoScalingNotifications:00000000-0000-0000-0000-000000000000",
+            "Sns": {
+                "Type": "Notification",
+                "MessageId": "00000000-0000-0000-0000-000000000000",
+                "TopicArn": "arn:aws:sns:us-east-1:123456789:AutoScalingNotifications",
+                "Subject": "Auto Scaling: termination for group \"autoscale-group-name\"",
+                "Message": "{\"Progress\":50,\"AccountId\":\"123456789123\",\"Description\":\"Terminating EC2 instance: i-00000000\",\"RequestId\":\"00000000-0000-0000-0000-000000000000\",\"EndTime\":\"2016-09-16T12:39:01.604Z\",\"AutoScalingGroupARN\":\"arn:aws:autoscaling:us-east-1:123456789:autoScalingGroup:00000000-0000-0000-0000-000000000000:autoScalingGroupName/autoscale-group-name\",\"ActivityId\":\"00000000-0000-0000-0000-000000000000\",\"StartTime\":\"2016-09-16T12:37:39.004Z\",\"Service\":\"AWS Auto Scaling\",\"Time\":\"2016-09-16T12:39:01.604Z\",\"EC2InstanceId\":\"i-00000000\",\"StatusCode\":\"InProgress\",\"StatusMessage\":\"\",\"Details\":{\"Subnet ID\":\"subnet-00000000\",\"Availability Zone\":\"us-east-1a\"},\"AutoScalingGroupName\":\"autoscale-group-name\",\"Cause\":\"At 2016-09-16T12:37:09Z a user request update of AutoScalingGroup constraints to min: 0, max: 0, desired: 0 changing the desired capacity from 1 to 0.  At 2016-09-16T12:37:38Z an instance was taken out of service in response to a difference between desired and actual capacity, shrinking the capacity from 1 to 0.  At 2016-09-16T12:37:39Z instance i-00000000 was selected for termination.\",\"Event\":\"autoscaling:EC2_INSTANCE_TERMINATE\"}",
+                "Timestamp": "2016-09-16T12:39:01.661Z",
+                "MessageAttributes": {}
+            }
+        }
+    ]
+}
