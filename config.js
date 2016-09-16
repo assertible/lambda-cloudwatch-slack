@@ -20,6 +20,9 @@ module.exports = {
     },
     elasticache: {
       match_text: "ElastiCache" // text in the sns message or topicname to match on to process this service type
+    },
+    autoscaling: {
+      match_text: "AutoScaling" // text in the sns message or topicname to match on to process this service type
     }
   }
 
