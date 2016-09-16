@@ -65,6 +65,7 @@ var handleElasticBeanstalk = function(event, context) {
 
   var stateYellow = message.indexOf(" to YELLOW");
   var stateDegraded = message.indexOf(" to Degraded");
+  var stateInfo = message.indexOf(" to Info");
   var removedInstance = message.indexOf("Removed instance ");
   var addingInstance = message.indexOf("Adding instance ");
   var abortedOperation = message.indexOf(" aborted operation.");
@@ -75,7 +76,7 @@ var handleElasticBeanstalk = function(event, context) {
   if (stateRed != -1 || stateSevere != -1 || butWithErrors != -1 || noPermission != -1 || failedDeploy != -1 || failedConfig != -1 || failedQuota != -1 || unsuccessfulCommand != -1) {
     color = "danger";
   }
-  if (stateYellow != -1 || stateDegraded != -1 || removedInstance != -1 || addingInstance != -1 || abortedOperation != -1 || abortedDeployment != -1) {
+  if (stateYellow != -1 || stateDegraded != -1 || stateInfo != -1 || removedInstance != -1 || addingInstance != -1 || abortedOperation != -1 || abortedDeployment != -1) {
     color = "warning";
   }
 
@@ -100,30 +101,41 @@ var handleCodeDeploy = function(event, context) {
   var subject = "AWS CodeDeploy Notification";
   var timestamp = (new Date(event.Records[0].Sns.Timestamp)).getTime()/1000;
   var snsSubject = event.Records[0].Sns.Subject;
-  var message = JSON.parse(event.Records[0].Sns.Message);
+  var message;
+  var fields = [];
   var color = "warning";
 
-  if(message.status === "SUCCEEDED"){
-    color = "good";
-  } else if(message.status === "FAILED"){
-    color = "danger";
+  try {
+    message = JSON.parse(event.Records[0].Sns.Message);
+
+    if(message.status === "SUCCEEDED"){
+      color = "good";
+    } else if(message.status === "FAILED"){
+      color = "danger";
+    }
+    fields.push({ "title": "Message", "value": snsSubject, "short": false });
+    fields.push({ "title": "Deployment Group", "value": message.deploymentGroupName, "short": true });
+    fields.push({ "title": "Application", "value": message.applicationName, "short": true });
+    fields.push({
+      "title": "Status Link",
+      "value": "https://console.aws.amazon.com/codedeploy/home?region=" + message.region + "#/deployments/" + message.deploymentId,
+      "short": false
+    });
   }
+  catch(e) {
+    color = "good";
+    message = event.Records[0].Sns.Message;
+    fields.push({ "title": "Message", "value": snsSubject, "short": false });
+    fields.push({ "title": "Detail", "value": message, "short": false });
+  }
+
 
   var slackMessage = {
     text: "*" + subject + "*",
     attachments: [
       {
         "color": color,
-        "fields": [
-          { "title": "Message", "value": snsSubject, "short": false },
-          { "title": "Deployment Group", "value": message.deploymentGroupName, "short": true },
-          { "title": "Application", "value": message.applicationName, "short": true },
-          {
-            "title": "Status Link",
-            "value": "https://console.aws.amazon.com/codedeploy/home?region=" + message.region + "#/deployments/" + message.deploymentId,
-            "short": false
-          }
-        ],
+        "fields": fields,
         "ts": timestamp
       }
     ]
@@ -217,6 +229,37 @@ var handleCloudWatch = function(event, context) {
   return _.merge(baseSlackMessage, slackMessage);
 };
 
+var handleAutoScaling = function(event, context) {
+  var subject = "AWS AutoScaling Notification"
+  var message = JSON.parse(event.Records[0].Sns.Message);
+  var timestamp = (new Date(event.Records[0].Sns.Timestamp)).getTime()/1000;
+  var eventname, nodename;
+  var color = "good";
+
+  for(key in message){
+    eventname = key;
+    nodename = message[key];
+    break;
+  }
+  var slackMessage = {
+    text: "*" + subject + "*",
+    attachments: [
+      {
+        "color": color,
+        "fields": [
+          { "title": "Message", "value": event.Records[0].Sns.Subject, "short": false },
+          { "title": "Description", "value": message.Description, "short": false },
+          { "title": "Event", "value": message.Event, "short": false },
+          { "title": "Cause", "value": message.Cause, "short": false }
+
+        ],
+        "ts": timestamp
+      }
+    ]
+  };
+  return _.merge(baseSlackMessage, slackMessage);
+};
+
 var processEvent = function(event, context) {
   console.log("sns received:" + JSON.stringify(event, null, 2));
   var slackMessage = null;
@@ -239,6 +282,10 @@ var processEvent = function(event, context) {
   else if(eventSubscriptionArn.indexOf(config.services.elasticache.match_text) > -1 || eventSnsSubject.indexOf(config.services.elasticache.match_text) > -1 || eventSnsMessage.indexOf(config.services.elasticache.match_text) > -1){
     console.log("processing elasticache notification");
     slackMessage = handleElasticache(event,context);
+  }
+  else if(eventSubscriptionArn.indexOf(config.services.autoscaling.match_text) > -1 || eventSnsSubject.indexOf(config.services.autoscaling.match_text) > -1 || eventSnsMessage.indexOf(config.services.autoscaling.match_text) > -1){
+    console.log("processing autoscaling notification");
+    slackMessage = handleAutoScaling(event, context);
   }
   else{
     context.fail("no matching processor for event");
