@@ -31,4 +31,5 @@ deploy:
 				--role $(AWS_ROLE) \
 				--accessKey $(AWS_ACCESS_KEY_ID) \
 				--secretKey $(AWS_ACCESS_KEY_SECRET) \
-				--region $(AWS_REGION)
+				--region $(AWS_REGION) \
+				--profile $(AWS_PROFILE)
