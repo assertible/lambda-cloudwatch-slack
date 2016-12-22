@@ -148,6 +148,7 @@ var handleElasticache = function(event, context) {
   var subject = "AWS ElastiCache Notification"
   var message = JSON.parse(event.Records[0].Sns.Message);
   var timestamp = (new Date(event.Records[0].Sns.Timestamp)).getTime()/1000;
+  var region = event.Records[0].EventSubscriptionArn.split(":")[3];
   var eventname, nodename;
   var color = "good";
 
@@ -166,7 +167,7 @@ var handleElasticache = function(event, context) {
           { "title": "Node", "value": nodename, "short": true },
           {
             "title": "Link to cache node",
-            "value": "https://console.aws.amazon.com/elasticache/home?region=" + config.region + "#cache-nodes:id=" + nodename + ";nodes",
+            "value": "https://console.aws.amazon.com/elasticache/home?region=" + region + "#cache-nodes:id=" + nodename + ";nodes",
             "short": false
           }
         ],
@@ -180,6 +181,7 @@ var handleElasticache = function(event, context) {
 var handleCloudWatch = function(event, context) {
   var timestamp = (new Date(event.Records[0].Sns.Timestamp)).getTime()/1000;
   var message = JSON.parse(event.Records[0].Sns.Message);
+  var region = event.Records[0].EventSubscriptionArn.split(":")[3];
   var subject = "AWS CloudWatch Notification";
   var alarmName = message.AlarmName;
   var metricName = message.Trigger.MetricName;
@@ -218,7 +220,7 @@ var handleCloudWatch = function(event, context) {
           { "title": "Current State", "value": newState, "short": true },
           {
             "title": "Link to Alarm",
-            "value": "https://console.aws.amazon.com/cloudwatch/home?region=" + config.region + "#alarm:alarmFilter=ANY;name=" + alarmName,
+            "value": "https://console.aws.amazon.com/cloudwatch/home?region=" + region + "#alarm:alarmFilter=ANY;name=" + alarmName,
             "short": false
           }
         ],
