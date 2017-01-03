@@ -3,7 +3,7 @@ LAMBDA_TEST?=./node_modules/node-lambda/bin/node-lambda
 LAMBDA_FUNCTION_NAME=
 AWS_REGION=
 AWS_ROLE=
-AWS_PROFILE=
+AWS_PROFILE=default
 
 all:
 	npm build
