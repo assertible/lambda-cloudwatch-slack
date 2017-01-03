@@ -98,6 +98,11 @@ Follow these steps to configure the webhook in Slack:
   5. Click 'Save Settings' at the bottom of the Slack integration
      page.
 
+### 4. Deploy to AWS Lambda
+
+The final step is to deploy the integration to AWS Lambda:
+
+    make deploy
 
 #### Unencrypted hook URL
 
