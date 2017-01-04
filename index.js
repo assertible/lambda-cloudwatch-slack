@@ -290,7 +290,7 @@ var processEvent = function(event, context) {
     slackMessage = handleAutoScaling(event, context);
   }
   else{
-    context.fail("no matching processor for event");
+    context.fail("No matching processor for event. [EventSubscriptionArn: " + eventSubscriptionArn + "]");
   }
 
   postMessage(slackMessage, function(response) {
