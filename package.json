@@ -1,6 +1,6 @@
 {
   "name": "lambda-cloudwatch-slack",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "Better Slack notifications for AWS CloudWatch",
   "authors": [
     "Assertible <admin@assertible.com>",
@@ -17,7 +17,7 @@
     "url": "^0.11.0"
   },
   "devDependencies": {
-    "node-lambda": "^0.8.6"
+    "node-lambda": "0.8.11"
   },
   "keywords": [
     "aws",
