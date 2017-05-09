@@ -94,7 +94,7 @@ var handleElasticBeanstalk = function(event, context) {
     ]
   };
 
-  return _.merge(baseSlackMessage, slackMessage);
+  return _.merge(slackMessage, baseSlackMessage);
 };
 
 var handleCodeDeploy = function(event, context) {
@@ -141,7 +141,7 @@ var handleCodeDeploy = function(event, context) {
     ]
   };
 
-  return _.merge(baseSlackMessage, slackMessage);
+  return _.merge(slackMessage, baseSlackMessage);
 };
 
 var handleElasticache = function(event, context) {
@@ -175,7 +175,7 @@ var handleElasticache = function(event, context) {
       }
     ]
   };
-  return _.merge(baseSlackMessage, slackMessage);
+  return _.merge(slackMessage, baseSlackMessage);
 };
 
 var handleCloudWatch = function(event, context) {
@@ -228,7 +228,7 @@ var handleCloudWatch = function(event, context) {
       }
     ]
   };
-  return _.merge(baseSlackMessage, slackMessage);
+  return _.merge(slackMessage, baseSlackMessage);
 };
 
 var handleAutoScaling = function(event, context) {
@@ -259,7 +259,7 @@ var handleAutoScaling = function(event, context) {
       }
     ]
   };
-  return _.merge(baseSlackMessage, slackMessage);
+  return _.merge(slackMessage, baseSlackMessage);
 };
 
 var processEvent = function(event, context) {
