@@ -87,8 +87,8 @@ If you don't want or need to encrypt your hook URL, you can use the
 `UNENCRYPTED_HOOK_URL`.  If this variable is specified, the
 `KMS_ENCRYPTED_HOOK_URL` is ignored.
 
-Follow these steps to encrypt your Slack hook URL for use in this
-function:
+If you **do** want to encrypt your hook URL, follow these steps to
+encrypt your Slack hook URL for use in this function:
 
   1. Create a KMS key -
      http://docs.aws.amazon.com/kms/latest/developerguide/create-keys.html.
@@ -145,8 +145,9 @@ make test
   AWS Lambda but are still in use.
 
 - `node-lambda` appends `-development` to Lambda function names. To
-  fix this, check out the `.env` file created by and set the
-  `AWS_ENVIRONMENT` var to an empty string, like `AWS_ENVIRONMENT=`
+  fix this, check out the `.env` file created by `node-lambda` and set
+  the `AWS_ENVIRONMENT` var to an empty string, like
+  `AWS_ENVIRONMENT=`
 
 ## License
 
