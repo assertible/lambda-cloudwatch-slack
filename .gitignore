@@ -1,5 +1,6 @@
 *~
 .env
+deploy.env
 npm-debug.log
 
 build/

@@ -49,40 +49,10 @@ variables may look like this:
 LAMBDA_FUNCTION_NAME=cloudwatch-to-slack
 AWS_REGION=us-west-2
 AWS_ROLE=arn:aws:iam::123456789123:role/lambda_exec_role
-AWS_PROFILE=myprofile
+AWS_PROFILE=default
 ```
 
-
-### 2. Configure AWS Lambda script
-
-Most of the configurations to this package are made through Lambda environment variables.  Open the `config.js`
-file to get the names of the environment variables that can be set.  There are several mandatory and optional
-configuration options.  We've tried to choose a good set of defaults:
-
-
-#### a. mandatory configuration
-
-A hook URL and a `slackChannel` are required configurations. The
-`slackChannel` is the name of the Slack room to send the messages. To
-get the value for the URL, you'll need to set up a Slack hook,
-[as described below](#3-setup-slack-hook).
-
-To configure a proper Slack webhook URL, either the
-`kmsEncyptedHookUrl` or `unencryptedHookUrl` needs to be filled
-out. `kmsEncyptedHookUrl` uses the AWS KMS encryption service. See the
-documentation below for more details
-([unencrypted hook url](#unencrypted-hook-url) &
-[encrypted hook url](#encrypted-hook-url))
-
-
-#### b. optional configuration
-
-All other configuration options are "optional". Some customize the
-look and text in the Slack notification; `slackUsername` and `orgIcon`
-will enhance the messages appearance.
-
-
-### 3. Setup Slack hook
+### 2. Setup Slack hook
 
 Follow these steps to configure the webhook in Slack:
 
@@ -99,23 +69,26 @@ Follow these steps to configure the webhook in Slack:
   5. Click 'Save Settings' at the bottom of the Slack integration
      page.
 
-### 4. Deploy to AWS Lambda
+### 3. Configure AWS Lambda script
 
-The final step is to deploy the integration to AWS Lambda:
+Next, open `deploy.env.example`, there are several configuration
+options here. At a minimum, you must fill out `UNENCRYPTED_HOOK_URL`
+(or `KMS_ENCRYPTED_HOOK_URL`) and `SLACK_CHANNEL` (the name of the Slack room to send messages).
 
-    make deploy
+When you're done, copy the file to `deploy.env`:
 
-#### Unencrypted hook URL
+```
+$ cp deploy.env.example deploy.env
+```
+
+#### Encrypted the Slack webhook URL
 
 If you don't want or need to encrypt your hook URL, you can use the
-`unencryptedHookUrl`.  If this variable is specified, the
-kmsEncyptedHookUrl is ignored.
+`UNENCRYPTED_HOOK_URL`.  If this variable is specified, the
+`KMS_ENCRYPTED_HOOK_URL` is ignored.
 
-
-#### Encrypted hook URL
-
-Follow these steps to encrypt your Slack hook URL for use in this
-function:
+If you **do** want to encrypt your hook URL, follow these steps to
+encrypt your Slack hook URL for use in this function:
 
   1. Create a KMS key -
      http://docs.aws.amazon.com/kms/latest/developerguide/create-keys.html.
@@ -150,6 +123,13 @@ function:
 }
 ```
 
+
+### 4. Deploy to AWS Lambda
+
+The final step is to deploy the integration to AWS Lambda:
+
+    make deploy
+
 ## Tests
 
 With the variables filled in, you can test the function:
@@ -158,6 +138,16 @@ With the variables filled in, you can test the function:
 npm install
 make test
 ```
+
+## Caveats
+
+- Environment variables specified in `deploy.env` may not show up on
+  AWS Lambda but are still in use.
+
+- `node-lambda` appends `-development` to Lambda function names. To
+  fix this, check out the `.env` file created by `node-lambda` and set
+  the `AWS_ENVIRONMENT` var to an empty string, like
+  `AWS_ENVIRONMENT=`
 
 ## License
 
