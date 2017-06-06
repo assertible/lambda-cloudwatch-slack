@@ -220,7 +220,7 @@ var handleCloudWatch = function(event, context) {
           { "title": "Current State", "value": newState, "short": true },
           {
             "title": "Link to Alarm",
-            "value": "https://console.aws.amazon.com/cloudwatch/home?region=" + region + "#alarm:alarmFilter=ANY;name=" + alarmName,
+            "value": "https://console.aws.amazon.com/cloudwatch/home?region=" + region + "#alarm:alarmFilter=ANY;name=" + encodeURIComponent(alarmName),
             "short": false
           }
         ],
