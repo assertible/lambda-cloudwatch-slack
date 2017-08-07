@@ -51,7 +51,7 @@ var postMessage = function(message, callback) {
 
 var handleElasticBeanstalk = function(event, context) {
   var timestamp = (new Date(event.Records[0].Sns.Timestamp)).getTime()/1000;
-  var subject = "AWS Elastic Beanstalk Notification";
+  var subject = event.Records[0].Sns.Subject || "AWS Elastic Beanstalk Notification";
   var message = event.Records[0].Sns.Message;
 
   var stateRed = message.indexOf(" to RED");
@@ -262,6 +262,39 @@ var handleAutoScaling = function(event, context) {
   return _.merge(slackMessage, baseSlackMessage);
 };
 
+var handleCatchAll = function(event, context) {
+
+    var record = event.Records[0]
+    var subject = record.Sns.Subject
+    var timestamp = new Date(record.Sns.Timestamp).getTime() / 1000;
+    var message = JSON.parse(record.Sns.Message)
+
+    // TODO - check for warning here as well
+    var color = message.NewStateValue === "ALARM" ? "red" : "green"
+
+    // Add all of the values from the event message to the Slack message description
+    var description = ""
+    for(key in message) {
+        description = key + ": " + message[key] + "<br/>"
+    }
+
+    var slackMessage = {
+        text: "*" + subject + "*",
+        attachments: [
+          {
+            "color": color,
+            "fields": [
+              { "title": "Message", "value": record.Sns.Subject, "short": false },
+              { "title": "Description", "value": description, "short": false }
+            ],
+            "ts": timestamp
+          }
+        ]
+    }
+
+  return _.merge(slackMessage, baseSlackMessage);
+}
+
 var processEvent = function(event, context) {
   console.log("sns received:" + JSON.stringify(event, null, 2));
   var slackMessage = null;
@@ -290,7 +323,7 @@ var processEvent = function(event, context) {
     slackMessage = handleAutoScaling(event, context);
   }
   else{
-    context.fail("No matching processor for event. [EventSubscriptionArn: " + eventSubscriptionArn + "]");
+    slackMessage = handleCatchAll(event, context);
   }
 
   postMessage(slackMessage, function(response) {
