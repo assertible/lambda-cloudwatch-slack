@@ -275,7 +275,12 @@ var handleCatchAll = function(event, context) {
     // Add all of the values from the event message to the Slack message description
     var description = ""
     for(key in message) {
-        description = key + ": " + message[key] + "<br/>"
+
+        var renderedMessage = typeof message[key] === 'object'
+                            ? JSON.stringify(message[key])
+                            : message[key]
+
+        description = description + "\n" + key + ": " + renderedMessage
     }
 
     var slackMessage = {
