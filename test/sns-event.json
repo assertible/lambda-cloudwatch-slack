@@ -1,0 +1,22 @@
+{
+  "Records": [
+    {
+      "EventSource": "aws:sns",
+      "EventVersion": "1.0",
+      "EventSubscriptionArn": "arn:aws:sns:eu-west-1:111111111111111:samlpe-alert:ff1e3698-7f85-4da2-a90e-13ad2afe30e0",
+      "Sns": {
+        "Type": "Notification",
+        "MessageId": "0d7a65e4-435e-5ff1-8e80-37e6fba3ef4f",
+        "TopicArn": "arn:aws:sns:eu-west-1:111111111111111:Sample-alert",
+        "Subject": "ALARM: \"Sample Alert\" in EU - Ireland",
+        "Message": "{\"AlarmName\":\"Sample Alert\",\"AlarmDescription\":null,\"AWSAccountId\":\"111111111111111\",\"NewStateValue\":\"ALARM\",\"NewStateReason\":\"Threshold Crossed: 1 datapoint [1446.0 (07/08/17 18:46:00)] was greater than or equal to the threshold (1000.0).\",\"StateChangeTime\":\"2017-08-07T18:51:41.602+0000\",\"Region\":\"EU - Ireland\",\"OldStateValue\":\"OK\",\"Trigger\":{\"MetricName\":\"RequestCount\",\"Namespace\":\"AWS/ApplicationELB\",\"StatisticType\":\"Statistic\",\"Statistic\":\"SUM\",\"Unit\":null,\"Dimensions\":[{\"name\":\"LoadBalancer\",\"value\":\"app/app/6892f491c9b95d3f\"}],\"Period\":300,\"EvaluationPeriods\":1,\"ComparisonOperator\":\"GreaterThanOrEqualToThreshold\",\"Threshold\":1000.0,\"TreatMissingData\":\"\",\"EvaluateLowSampleCountPercentile\":\"\"}}",
+        "Timestamp": "2017-08-07T18:51:41.652Z",
+        "SignatureVersion": "1",
+        "Signature": "lol",
+        "SigningCertUrl": "https://sns.eu-west-1.amazonaws.com/SimpleNotificationService-b95095beb82e8f6a0463n12jnkndswea.pem",
+        "UnsubscribeUrl": "https://sns.eu-west-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:eu-west-1:111111111111111:Sample-alert:ff1e3698-7f85-4da2-a90e-13ad2afe30e0",
+        "MessageAttributes": {}
+      }
+    }
+  ]
+}
