@@ -268,9 +268,13 @@ var handleCatchAll = function(event, context) {
     var subject = record.Sns.Subject
     var timestamp = new Date(record.Sns.Timestamp).getTime() / 1000;
     var message = JSON.parse(record.Sns.Message)
+    var color = "warning";
 
-    // TODO - check for warning here as well
-    var color = message.NewStateValue === "ALARM" ? "red" : "green"
+    if (message.NewStateValue === "ALARM") {
+        color = "danger";
+    } else if (message.NewStateValue === "OK") {
+        color = "good";
+    }
 
     // Add all of the values from the event message to the Slack message description
     var description = ""
