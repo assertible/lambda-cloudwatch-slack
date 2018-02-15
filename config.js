@@ -21,6 +21,10 @@ module.exports = {
       // text in the sns message or topicname to match on to process this service type
       match_text: "CodeDeploy"
     },
+    codepipeline: {
+      // text in the sns message or topicname to match on to process this service type
+      match_text: "codepipeline-alerts"
+    },
     elasticache: {
       // text in the sns message or topicname to match on to process this service type
       match_text: "ElastiCache"
