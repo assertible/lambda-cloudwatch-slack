@@ -57,7 +57,7 @@ AWS_PROFILE=default
 Follow these steps to configure the webhook in Slack:
 
   1. Navigate to
-     [https://.slack.com/services/new](https://.slack.com/services/new)
+     [https://slack.com/services/new](https://slack.com/services/new)
      and search for and select "Incoming WebHooks".
 
   3. Choose the default channel where messages will be sent and click
