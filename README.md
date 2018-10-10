@@ -2,13 +2,6 @@
 
 An [AWS Lambda](http://aws.amazon.com/lambda/) function for better Slack notifications. 
 
-## Difference from [Assertible's repositpory](https://github.com/assertible/lambda-cloudwatch-slack)
-
-* You have to write variables only in the `.env` file. It's simpler. Don't care about `deploy.env` and `Makefile`
-* You don't need to edit `config.js` to get better formatting for CloudWatch.
-* With this fork you can't customize your slack bot with env variables. 
-Just do it using the webhook configure page in Slack.
-
 ## Overview
 
 This function was originally derived from the
@@ -111,8 +104,8 @@ encrypt your Slack hook URL for use in this function:
 
 The final step is to deploy the integration to AWS Lambda:
 
-    make deps
-    make deploy
+    npm install
+    npm run deploy
 
 ## Tests
 
@@ -120,7 +113,7 @@ With the variables filled in, you can test the function:
 
 ```
 npm install
-make test
+npm test
 ```
 
 ## License
