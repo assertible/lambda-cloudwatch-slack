@@ -1,8 +1,7 @@
 # lambda-cloudwatch-slack
 
-An [AWS Lambda](http://aws.amazon.com/lambda/) function for better
-Slack
-notifications. [Check out the blog post](https://assertible.com/blog/npm-package-lambda-cloudwatch-slack).
+An [AWS Lambda](http://aws.amazon.com/lambda/) function for better Slack notifications. 
+[Check out the blog post](https://assertible.com/blog/npm-package-lambda-cloudwatch-slack).
 
 [![BuildStatus](https://travis-ci.org/assertible/lambda-cloudwatch-slack.png?branch=master)](https://travis-ci.org/assertible/lambda-cloudwatch-slack)
 [![NPM version](https://badge.fury.io/js/lambda-cloudwatch-slack.png)](http://badge.fury.io/js/lambda-cloudwatch-slack)
@@ -36,23 +35,17 @@ ways:
 
 ## Configuration
 
-Clone this repository and open the Makefile in your editor, then follow
-the steps beow:
+### 1. Clone this repository
 
-
-### 1. Configure AWS environment
-
-Fill in the variables at the top of the `Makefile`. For example, your
-variables may look like this:
+### 2. Configure environment variables
 
 ```
-LAMBDA_FUNCTION_NAME=cloudwatch-to-slack
-AWS_REGION=us-west-2
-AWS_ROLE=arn:aws:iam::123456789123:role/lambda_exec_role
-AWS_PROFILE=default
+cp .env.example .env
 ```
 
-### 2. Setup Slack hook
+Fill in the variables in the `.env`. 
+
+### 3. Setup Slack hook
 
 Follow these steps to configure the webhook in Slack:
 
@@ -68,18 +61,6 @@ Follow these steps to configure the webhook in Slack:
 
   5. Click 'Save Settings' at the bottom of the Slack integration
      page.
-
-### 3. Configure AWS Lambda script
-
-Next, open `deploy.env.example`, there are several configuration
-options here. At a minimum, you must fill out `UNENCRYPTED_HOOK_URL`
-(or `KMS_ENCRYPTED_HOOK_URL`) and `SLACK_CHANNEL` (the name of the Slack room to send messages).
-
-When you're done, copy the file to `deploy.env`:
-
-```
-$ cp deploy.env.example deploy.env
-```
 
 #### Encrypted the Slack webhook URL
 
@@ -128,7 +109,8 @@ encrypt your Slack hook URL for use in this function:
 
 The final step is to deploy the integration to AWS Lambda:
 
-    make deploy
+    npm install
+    npm run deploy
 
 ## Tests
 
@@ -136,18 +118,8 @@ With the variables filled in, you can test the function:
 
 ```
 npm install
-make test
+npm test
 ```
-
-## Caveats
-
-- Environment variables specified in `deploy.env` may not show up on
-  AWS Lambda but are still in use.
-
-- `node-lambda` appends `-development` to Lambda function names. To
-  fix this, check out the `.env` file created by `node-lambda` and set
-  the `AWS_ENVIRONMENT` var to an empty string, like
-  `AWS_ENVIRONMENT=`
 
 ## License
 
