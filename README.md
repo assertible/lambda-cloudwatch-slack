@@ -1,6 +1,11 @@
 # lambda-cloudwatch-slack
 
 An [AWS Lambda](http://aws.amazon.com/lambda/) function for better Slack notifications. 
+[Check out the blog post](https://assertible.com/blog/npm-package-lambda-cloudwatch-slack).
+
+[![BuildStatus](https://travis-ci.org/assertible/lambda-cloudwatch-slack.png?branch=master)](https://travis-ci.org/assertible/lambda-cloudwatch-slack)
+[![NPM version](https://badge.fury.io/js/lambda-cloudwatch-slack.png)](http://badge.fury.io/js/lambda-cloudwatch-slack)
+
 
 ## Overview
 
@@ -11,19 +16,19 @@ ways:
 
 **Better default formatting for CloudWatch notifications:**
 
-![AWS Cloud Notification for Slack](https://github.com/pixel-point/lambda-cloudwatch-slack/raw/master/images/cloudwatch.png)
+![AWS Cloud Notification for Slack](https://github.com/assertible/lambda-cloudwatch-slack/raw/master/images/cloudwatch.png)
 
 **Support for notifications from Elastic Beanstalk:**
 
-![Elastic Beanstalk Slack Notifications](https://github.com/pixel-point/lambda-cloudwatch-slack/raw/master/images/elastic-beanstalk.png)
+![Elastic Beanstalk Slack Notifications](https://github.com/assertible/lambda-cloudwatch-slack/raw/master/images/elastic-beanstalk.png)
 
 **Support for notifications from Code Deploy:**
 
-![AWS CodeDeploy Notifications](https://github.com/pixel-point/lambda-cloudwatch-slack/raw/master/images/code-deploy.png)
+![AWS CodeDeploy Notifications](https://github.com/assertible/lambda-cloudwatch-slack/raw/master/images/code-deploy.png)
 
 **Basic support for notifications from ElastiCache:**
 
-![AWS ElastiCache Notifications](https://github.com/pixel-point/lambda-cloudwatch-slack/raw/master/images/elasticache.png)
+![AWS ElastiCache Notifications](https://github.com/assertible/lambda-cloudwatch-slack/raw/master/images/elasticache.png)
 
 **Support for encrypted and unencrypted Slack webhook url:**
 

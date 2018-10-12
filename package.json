@@ -2,8 +2,7 @@
   "name": "lambda-cloudwatch-slack",
   "version": "0.3.0",
   "description": "Better Slack notifications for AWS CloudWatch",
-  "authors": [
-    "Assertible <admin@assertible.com>",
+  "authors": [    
     "Christopher Reichert <creichert07@gmail.com>",
     "Cody Reichert <codyreichert@gmail.com>",
     "Alexandr Promakh <s-promakh@ya.ru>"
@@ -31,7 +30,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/pixelpoint/lambda-cloudwatch-slack.git"
+    "url": "https://github.com/assertible/lambda-cloudwatch-slack.git"
   },
   "scripts": {
     "deploy": "./scripts/deploy.sh",

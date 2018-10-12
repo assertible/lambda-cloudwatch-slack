@@ -363,7 +363,8 @@ var processEvent = function(event, context) {
 
   try {
     eventSnsMessage = JSON.parse(eventSnsMessageRaw);
-  } catch (e) {    
+  }
+  catch (e) {    
   }
 
   if(eventSubscriptionArn.indexOf(config.services.codepipeline.match_text) > -1 || eventSnsSubject.indexOf(config.services.codepipeline.match_text) > -1 || eventSnsMessageRaw.indexOf(config.services.codepipeline.match_text) > -1){
