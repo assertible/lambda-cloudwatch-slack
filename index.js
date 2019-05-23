@@ -254,7 +254,7 @@ var handleCloudWatch = function(event, context) {
         "color": color,
         "fields": [
           { "title": "Alarm Name", "value": alarmName, "short": true },
-          { "title": "Alarm Description", "value": alarmReason, "short": false},
+          { "title": "Alarm Description", "value": alarmDescription, "short": false},
           {
             "title": "Trigger",
             "value": trigger.Statistic + " "
