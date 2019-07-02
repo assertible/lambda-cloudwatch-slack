@@ -92,7 +92,7 @@ var handleElasticBeanstalk = function(event, context) {
     ]
   };
 
-  return _.merge(slackMessage, baseSlackMessage);
+  return Promise.resolve(_.merge(slackMessage, baseSlackMessage));
 };
 
 var handleCodeDeploy = function(event, context) {
@@ -139,7 +139,7 @@ var handleCodeDeploy = function(event, context) {
     ]
   };
 
-  return _.merge(slackMessage, baseSlackMessage);
+  return Promise.resolve(_.merge(slackMessage, baseSlackMessage));
 };
 
 var handleCodePipeline = function(event, context) {
@@ -198,7 +198,7 @@ var handleCodePipeline = function(event, context) {
     ]
   };
 
-  return _.merge(slackMessage, baseSlackMessage);
+  return Promise.resolve(_.merge(slackMessage, baseSlackMessage));
 };
 
 var handleElasticache = function(event, context) {
@@ -232,7 +232,7 @@ var handleElasticache = function(event, context) {
       }
     ]
   };
-  return _.merge(slackMessage, baseSlackMessage);
+  return Promise.resolve(_.merge(slackMessage, baseSlackMessage));
 };
 
 var handleCloudWatch = function(event, context) {
@@ -242,50 +242,67 @@ var handleCloudWatch = function(event, context) {
   var subject = "AWS CloudWatch Notification";
   var alarmName = message.AlarmName;
   var metricName = message.Trigger.MetricName;
+  var metricNamespace = message.Trigger.Namespace;
   var oldState = message.OldStateValue;
   var newState = message.NewStateValue;
   var alarmDescription = message.AlarmDescription;
   var alarmReason = message.NewStateReason;
   var trigger = message.Trigger;
   var color = "warning";
+  var logs = new AWS.CloudWatchLogs({ region: region });
 
-  if (message.NewStateValue === "ALARM") {
+  var metricFilters = logs
+    .describeMetricFilters({ metricName: metricName, metricNamespace: metricNamespace })
+    .promise();
+
+  return metricFilters.then(data => {
+    if (message.NewStateValue === "ALARM") {
       color = "danger";
-  } else if (message.NewStateValue === "OK") {
+    } else if (message.NewStateValue === "OK") {
       color = "good";
-  }
+    }
 
-  var slackMessage = {
-    text: "*" + subject + "*",
-    attachments: [
-      {
-        "color": color,
-        "fields": [
-          { "title": "Alarm Name", "value": alarmName, "short": true },
-          { "title": "Alarm Description", "value": alarmDescription, "short": false},
-          {
-            "title": "Trigger",
-            "value": trigger.Statistic + " "
-              + metricName + " "
-              + trigger.ComparisonOperator + " "
-              + trigger.Threshold + " for "
-              + trigger.EvaluationPeriods + " period(s) of "
-              + trigger.Period + " seconds.",
+    var cloudwatchURLBase = "https://console.aws.amazon.com/cloudwatch/home?region=" + region
+
+    var logGroupLinks = data.metricFilters
+      .map(filter => ({
+        "title": filter.filterName + " logs source",
+        "value": cloudwatchURLBase + "#logEventViewer:group=" + encodeURIComponent(filter.logGroupName) + ";filter=" + encodeURIComponent(filter.filterPattern) + ";start=PT" + trigger.EvaluationPeriods + "S",
+        "short": false
+      }))
+
+    var slackMessage = {
+      text: "*" + subject + "*",
+      attachments: [
+        {
+          "color": color,
+          "fields": [
+            { "title": "Alarm Name", "value": alarmName, "short": true },
+            { "title": "Alarm Description", "value": alarmDescription, "short": false},
+            {
+              "title": "Trigger",
+              "value": trigger.Statistic + " "
+                + metricName + " "
+                + trigger.ComparisonOperator + " "
+                + trigger.Threshold + " for "
+                + trigger.EvaluationPeriods + " period(s) of "
+                + trigger.Period + " seconds.",
+                "short": false
+            },
+            { "title": "Old State", "value": oldState, "short": true },
+            { "title": "Current State", "value": newState, "short": true },
+            {
+              "title": "Link to Alarm",
+              "value": cloudwatchURLBase + "#alarm:alarmFilter=ANY;name=" + encodeURIComponent(alarmName),
               "short": false
-          },
-          { "title": "Old State", "value": oldState, "short": true },
-          { "title": "Current State", "value": newState, "short": true },
-          {
-            "title": "Link to Alarm",
-            "value": "https://console.aws.amazon.com/cloudwatch/home?region=" + region + "#alarm:alarmFilter=ANY;name=" + encodeURIComponent(alarmName),
-            "short": false
-          }
-        ],
-        "ts":  timestamp
-      }
-    ]
-  };
-  return _.merge(slackMessage, baseSlackMessage);
+            }
+          ].concat(logGroupLinks),
+          "ts":  timestamp
+        }
+      ]
+    };
+    return _.merge(slackMessage, baseSlackMessage);
+  });
 };
 
 var handleAutoScaling = function(event, context) {
@@ -316,7 +333,7 @@ var handleAutoScaling = function(event, context) {
       }
     ]
   };
-  return _.merge(slackMessage, baseSlackMessage);
+  return Promise.resolve(_.merge(slackMessage, baseSlackMessage));
 };
 
 var handleCatchAll = function(event, context) {
@@ -358,7 +375,7 @@ var handleCatchAll = function(event, context) {
         ]
     }
 
-  return _.merge(slackMessage, baseSlackMessage);
+  return Promise.resolve(_.merge(slackMessage, baseSlackMessage));
 }
 
 var processEvent = function(event, context) {
@@ -403,18 +420,20 @@ var processEvent = function(event, context) {
     slackMessage = handleCatchAll(event, context);
   }
 
-  postMessage(slackMessage, function(response) {
-    if (response.statusCode < 400) {
-      console.info('message posted successfully');
-      context.succeed();
-    } else if (response.statusCode < 500) {
-      console.error("error posting message to slack API: " + response.statusCode + " - " + response.statusMessage);
-      // Don't retry because the error is due to a problem with the request
-      context.succeed();
-    } else {
-      // Let Lambda retry
-      context.fail("server error when processing message: " + response.statusCode + " - " + response.statusMessage);
-    }
+  slackMessage.then(message => {
+    postMessage(message, function(response) {
+      if (response.statusCode < 400) {
+        console.info('message posted successfully');
+        context.succeed();
+      } else if (response.statusCode < 500) {
+        console.error("error posting message to slack API: " + response.statusCode + " - " + response.statusMessage);
+        // Don't retry because the error is due to a problem with the request
+        context.succeed();
+      } else {
+        // Let Lambda retry
+        context.fail("server error when processing message: " + response.statusCode + " - " + response.statusMessage);
+      }
+    });
   });
 };
 
