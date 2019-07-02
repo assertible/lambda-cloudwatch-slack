@@ -267,7 +267,7 @@ var handleCloudWatch = function(event, context) {
     var logGroupLinks = data.metricFilters
       .map(filter => ({
         "title": filter.filterName + " logs source",
-        "value": cloudwatchURLBase + "#logEventViewer:group=" + encodeURIComponent(filter.logGroupName) + ";filter=" + encodeURIComponent(filter.filterPattern) + ";start=PT" + trigger.EvaluationPeriods + "S",
+        "value": cloudwatchURLBase + "#logEventViewer:group=" + encodeURIComponent(filter.logGroupName) + ";filter=" + encodeURIComponent(filter.filterPattern) + ";start=PT" + trigger.Period + "S",
         "short": false
       }))
 
