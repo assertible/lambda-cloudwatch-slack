@@ -9,7 +9,7 @@ var baseSlackMessage = {
   attachments: [
     {
       fields: config.mention ? [
-        { title: "Mention", value: "<!" + config.mention + ">", short: true }
+        { title: "Mention", value: config.mention, short: true }
       ] : []
     }
   ]
