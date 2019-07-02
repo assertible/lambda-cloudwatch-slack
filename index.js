@@ -5,7 +5,15 @@ var config = require('./config');
 var _ = require('lodash');
 var hookUrl;
 
-var baseSlackMessage = {}
+var baseSlackMessage = {
+  attachments: [
+    {
+      fields: config.mention ? [
+        { title: "Mention", value: "<!" + config.mention + ">", short: true }
+      ] : []
+    }
+  ]
+}
 
 var postMessage = function(message, callback) {
   var body = JSON.stringify(message);
