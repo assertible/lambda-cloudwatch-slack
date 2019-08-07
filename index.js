@@ -233,12 +233,33 @@ var handleCloudWatch = function(event, context) {
   var region = event.Records[0].EventSubscriptionArn.split(":")[3];
   var subject = "AWS CloudWatch Notification";
   var alarmName = message.AlarmName;
-  var metricName = message.Trigger.MetricName;
+  var trigger = message.Trigger;
+  var alarmExpression;
+  if (typeof trigger.MetricName === "undefined") {
+    // This is a CloudWatch metric math alarm. Instead of a MetricName and
+    // statistic there is an array of Metrics where the first element is the
+    // math expression.
+
+    // first build a dictionary mapping metric ids to metric name and statistic
+    var sourceMetrics = {};
+    for (const metric of trigger.Metrics.slice(1)) {
+      sourceMetrics[metric.Id] = metric.MetricStat.Stat + ":"
+        + metric.MetricStat.Metric.MetricName;
+    }
+
+    // now replace each instance of the metric id in the alarm expression
+    alarmExpression = trigger.Metrics[0].Expression;
+    for (var metricid in sourceMetrics) {
+      alarmExpression = alarmExpression.replace(new RegExp(metricid,"g"),sourceMetrics[metricid]);
+    }
+  } else {
+    // This is a standard CloudWatch alarm on a single metric
+    alarmExpression = trigger.Statistic + ":" + trigger.MetricName;
+  }
   var oldState = message.OldStateValue;
   var newState = message.NewStateValue;
   var alarmDescription = message.AlarmDescription;
   var alarmReason = message.NewStateReason;
-  var trigger = message.Trigger;
   var color = "warning";
 
   if (message.NewStateValue === "ALARM") {
@@ -257,8 +278,7 @@ var handleCloudWatch = function(event, context) {
           { "title": "Alarm Description", "value": alarmDescription, "short": false},
           {
             "title": "Trigger",
-            "value": trigger.Statistic + " "
-              + metricName + " "
+            "value": alarmExpression + " "
               + trigger.ComparisonOperator + " "
               + trigger.Threshold + " for "
               + trigger.EvaluationPeriods + " period(s) of "
@@ -364,7 +384,7 @@ var processEvent = function(event, context) {
   try {
     eventSnsMessage = JSON.parse(eventSnsMessageRaw);
   }
-  catch (e) {    
+  catch (e) {
   }
 
   if(eventSubscriptionArn.indexOf(config.services.codepipeline.match_text) > -1 || eventSnsSubject.indexOf(config.services.codepipeline.match_text) > -1 || eventSnsMessageRaw.indexOf(config.services.codepipeline.match_text) > -1){
