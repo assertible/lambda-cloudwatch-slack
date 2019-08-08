@@ -3,6 +3,7 @@ var url = require('url');
 var https = require('https');
 var config = require('./config');
 var _ = require('lodash');
+var escapeStringRegexp = require('escape-string-regexp');
 var hookUrl;
 
 var baseSlackMessage = {}
@@ -235,22 +236,20 @@ var handleCloudWatch = function(event, context) {
   var alarmName = message.AlarmName;
   var trigger = message.Trigger;
   var alarmExpression;
-  if (typeof trigger.MetricName === "undefined") {
+
+  if (typeof trigger.Metrics === 'object') {
     // This is a CloudWatch metric math alarm. Instead of a MetricName and
     // statistic there is an array of Metrics where the first element is the
-    // math expression.
-
-    // first build a dictionary mapping metric ids to metric name and statistic
-    var sourceMetrics = {};
-    for (const metric of trigger.Metrics.slice(1)) {
-      sourceMetrics[metric.Id] = metric.MetricStat.Stat + ":"
-        + metric.MetricStat.Metric.MetricName;
-    }
-
-    // now replace each instance of the metric id in the alarm expression
+    // math expression. Need to process each metric in the list of Metrics
+    // and replace occurences of it in the alarm expression
     alarmExpression = trigger.Metrics[0].Expression;
-    for (var metricid in sourceMetrics) {
-      alarmExpression = alarmExpression.replace(new RegExp(metricid,"g"),sourceMetrics[metricid]);
+    var triggerMetricsLength = trigger.Metrics.length;
+    for (var i = 1; i < triggerMetricsLength; i++) {
+      var metric = trigger.Metrics[i];
+      alarmExpression = alarmExpression.replace(
+        new RegExp(escapeStringRegexp(metric.Id), 'g'),
+        metric.MetricStat.Stat + ':' + metric.MetricStat.Metric.MetricName
+      );
     }
   } else {
     // This is a standard CloudWatch alarm on a single metric
