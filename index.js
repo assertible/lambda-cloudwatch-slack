@@ -233,18 +233,24 @@ var handleCloudWatch = function(event, context) {
   var region = event.Records[0].EventSubscriptionArn.split(":")[3];
   var subject = "AWS CloudWatch Notification";
   var alarmName = message.AlarmName;
-  var metricName = message.Trigger.MetricName;
   var oldState = message.OldStateValue;
   var newState = message.NewStateValue;
   var alarmDescription = message.AlarmDescription;
   var alarmReason = message.NewStateReason;
   var trigger = message.Trigger;
   var color = "warning";
+  var alarmConfigInfo;
 
   if (message.NewStateValue === "ALARM") {
       color = "danger";
   } else if (message.NewStateValue === "OK") {
       color = "good";
+  }
+
+  if (Array.isArray(trigger.Metrics) && trigger.Metrics.length > 0) {
+    alarmConfigInfo = "Expression based alarm";
+  } else {
+    alarmConfigInfo = trigger.Statistic + " " + trigger.MetricName;
   }
 
   var slackMessage = {
@@ -257,8 +263,7 @@ var handleCloudWatch = function(event, context) {
           { "title": "Alarm Description", "value": alarmDescription, "short": false},
           {
             "title": "Trigger",
-            "value": trigger.Statistic + " "
-              + metricName + " "
+            "value": alarmConfigInfo + " "
               + trigger.ComparisonOperator + " "
               + trigger.Threshold + " for "
               + trigger.EvaluationPeriods + " period(s) of "
