@@ -5,7 +5,9 @@ var config = require('./config');
 var _ = require('lodash');
 var hookUrl;
 
-var baseSlackMessage = {}
+var channel = config.slackChannel;
+
+var baseSlackMessage = {"channel": channel}
 
 var postMessage = function(message, callback) {
   var body = JSON.stringify(message);
@@ -412,7 +414,7 @@ var processEvent = function(event, context) {
 
 exports.handler = function(event, context) {
   if (hookUrl) {
-    processEvent(event, context);
+             processEvent(event, context);
   } else if (config.unencryptedHookUrl) {
     hookUrl = config.unencryptedHookUrl;
     processEvent(event, context);
@@ -430,7 +432,7 @@ exports.handler = function(event, context) {
         processEvent(event, context);
       }
     });
-  } else {
+  }else {
     context.fail('hook url has not been set.');
   }
 };
