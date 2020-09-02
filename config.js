@@ -3,13 +3,14 @@ module.exports = {
   unencryptedHookUrl: process.env.UNENCRYPTED_HOOK_URL,    // unencrypted slack webhook url
 
   mention: process.env.MENTION,
+  channel: process.env.CHANNEL,
 
   services: {
     elasticbeanstalk: {
       // text in the sns message or topicname to match on to process this service type
       match_text: "ElasticBeanstalkNotifications"
     },
-    cloudwatch: {     
+    cloudwatch: {
     },
     codepipeline: {
       // text in the sns message or topicname to match on to process this service type
