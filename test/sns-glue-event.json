@@ -1,0 +1,18 @@
+{
+  "Records": [
+    {
+      "EventSource": "aws:sns",
+      "EventVersion": "1.0",
+      "EventSubscriptionArn": "arn:aws:sns:us-west-2:123456789123:GlueNotifications:00000000-0000-0000-0000-000000000000",
+      "Sns": {
+        "Type": "Notification",
+        "MessageId": "00000000-0000-0000-0000-000000000000",
+        "TopicArn": "arn:aws:sns:us-west-2:123456789123:GlueNotifications",
+        "Timestamp": "2016-08-11T07:24:05.959Z",
+        "Subject": "Glue Job State Change",
+        "Message": "{\"version\":\"0\",\"id\":\"226542f8-c37d-02bb-6ca0-990a964ccfbc\",\"detail-type\":\"Glue Job State Change\",\"source\":\"aws.glue\",\"account\":\"478058018293\",\"time\":\"2021-01-04T04:13:09Z\",\"region\":\"ap-southeast-2\",\"resources\":[],\"detail\":{\"jobName\":\"metrics-data-etl-job-v2-ap-southeast-2-dev-apps\",\"severity\":\"ERROR\",\"state\":\"FAILED\",\"jobRunId\":\"jr_895cdcd39fdfee4f1ed1010ad58810502efcde1217be3a58f02e3ed32858440c\",\"message\":\"JobName:metrics-data-etl-job-v2-ap-southeast-2-dev-apps and JobRunId:jr_895cdcd39fdfee4f1ed1010ad58810502efcde1217be3a58f02e3ed32858440c failed to execute with exception Role arn:aws:iam::478058018293:role\/metrics-data-glue-etl-v2-ap-southeast-2-dev-apps should be given assume role permissions for Glue Service.\\n\"}}",
+        "MessageAttributes": {}
+      }
+    }
+  ]
+}
