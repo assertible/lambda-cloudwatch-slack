@@ -1,0 +1,18 @@
+{
+    "Records": [
+        {
+            "EventSource": "aws:sns",
+            "EventVersion": "1.0",
+            "EventSubscriptionArn": "arn:aws:sns:us-east-1:123456789123:cloudwatch-alarms:00000000-0000-0000-0000-000000000000",
+            "Sns": {
+                "Type": "Notification",
+                "MessageId": "00000000-0000-0000-0000-000000000000",
+                "TopicArn": "arn:aws:sns:us-east-1:123456789123:cloudwatch-alarms",
+                "Subject": "ALARM: \"Sample Metric Math Alert\" in US East (N. Virginia)",
+                "Message": "{\"AlarmName\":\"Sample Metric Math Alert\",\"AlarmDescription\":null,\"AWSAccountId\":\"946184294613\",\"NewStateValue\":\"ALARM\",\"NewStateReason\":\"Threshold Crossed: 1 out of the last 1 datapoints [8133.333333333447 (07/08/19 18:43:00)] was greater than the threshold (1000.0) (minimum 1 datapoint for OK -> ALARM transition).\",\"StateChangeTime\":\"2019-08-07T18:45:24.269+0000\",\"Region\":\"US East (N. Virginia)\",\"OldStateValue\":\"OK\",\"Trigger\":{\"Period\":60,\"EvaluationPeriods\":1,\"ComparisonOperator\":\"GreaterThanThreshold\",\"Threshold\":1000.0,\"TreatMissingData\":\"- TreatMissingData:                    missing\",\"EvaluateLowSampleCountPercentile\":\"\",\"Metrics\":[{\"Expression\":\"m1*100*m2 - MIN(m1)\",\"Id\":\"e2\",\"Label\":\"Expression2\",\"ReturnData\":true},{\"Id\":\"m1\",\"MetricStat\":{\"Metric\":{\"Dimensions\":[{\"value\":\"i-0a5c8ea70646e7b05\",\"name\":\"InstanceId\"}],\"MetricName\":\"CPUUtilization\",\"Namespace\":\"AWS/EC2\"},\"Period\":60,\"Stat\":\"Average\"},\"ReturnData\":false},{\"Id\":\"m2\",\"MetricStat\":{\"Metric\":{\"Dimensions\":[{\"value\":\"i-0a5c8ea70646e7b05\",\"name\":\"InstanceId\"}],\"MetricName\":\"NetworkOut\",\"Namespace\":\"AWS/EC2\"},\"Period\":60,\"Stat\":\"Average\"},\"ReturnData\":false}]}}",
+                "Timestamp": "2019-08-07T18:45:24.355Z",
+                "MessageAttributes": {}
+            }
+        }
+    ]
+}

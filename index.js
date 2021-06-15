@@ -3,6 +3,7 @@ var url = require('url');
 var https = require('https');
 var config = require('./config');
 var _ = require('lodash');
+var escapeStringRegexp = require('escape-string-regexp');
 var hookUrl;
 
 var baseSlackMessage = {}
@@ -233,12 +234,31 @@ var handleCloudWatch = function(event, context) {
   var region = event.Records[0].EventSubscriptionArn.split(":")[3];
   var subject = "AWS CloudWatch Notification";
   var alarmName = message.AlarmName;
-  var metricName = message.Trigger.MetricName;
+  var trigger = message.Trigger;
+  var alarmExpression;
+
+  if (typeof trigger.Metrics === 'object') {
+    // This is a CloudWatch metric math alarm. Instead of a MetricName and
+    // statistic there is an array of Metrics where the first element is the
+    // math expression. Need to process each metric in the list of Metrics
+    // and replace occurences of it in the alarm expression
+    alarmExpression = trigger.Metrics[0].Expression;
+    var triggerMetricsLength = trigger.Metrics.length;
+    for (var i = 1; i < triggerMetricsLength; i++) {
+      var metric = trigger.Metrics[i];
+      alarmExpression = alarmExpression.replace(
+        new RegExp(escapeStringRegexp(metric.Id), 'g'),
+        metric.MetricStat.Stat + ':' + metric.MetricStat.Metric.MetricName
+      );
+    }
+  } else {
+    // This is a standard CloudWatch alarm on a single metric
+    alarmExpression = trigger.Statistic + ":" + trigger.MetricName;
+  }
   var oldState = message.OldStateValue;
   var newState = message.NewStateValue;
   var alarmDescription = message.AlarmDescription;
   var alarmReason = message.NewStateReason;
-  var trigger = message.Trigger;
   var color = "warning";
 
   if (message.NewStateValue === "ALARM") {
@@ -257,8 +277,7 @@ var handleCloudWatch = function(event, context) {
           { "title": "Alarm Description", "value": alarmDescription, "short": false},
           {
             "title": "Trigger",
-            "value": trigger.Statistic + " "
-              + metricName + " "
+            "value": alarmExpression + " "
               + trigger.ComparisonOperator + " "
               + trigger.Threshold + " for "
               + trigger.EvaluationPeriods + " period(s) of "
@@ -364,7 +383,7 @@ var processEvent = function(event, context) {
   try {
     eventSnsMessage = JSON.parse(eventSnsMessageRaw);
   }
-  catch (e) {    
+  catch (e) {
   }
 
   if(eventSubscriptionArn.indexOf(config.services.codepipeline.match_text) > -1 || eventSnsSubject.indexOf(config.services.codepipeline.match_text) > -1 || eventSnsMessageRaw.indexOf(config.services.codepipeline.match_text) > -1){
