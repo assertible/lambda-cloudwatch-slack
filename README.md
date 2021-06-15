@@ -112,6 +112,23 @@ The final step is to deploy the integration to AWS Lambda:
     npm install
     npm run deploy
 
+## Programmatic usage
+
+If you want to programmatically pass in a configuration, rather than relying on
+environment variables, you can create your own handler:
+
+```js
+const { createHandler, config } = require('lambda-cloudwatch-slack');
+
+exports.handler = createHandler({
+   ...config,
+   unencryptedHookUrl: 'https://hooks.slack.com/services/...'
+})
+```
+
+This can for example be useful if you need to get the webhook url from
+AWS Parameter Store or Secrets Manager at runtime.
+
 ## Tests
 
 With the variables filled in, you can test the function:

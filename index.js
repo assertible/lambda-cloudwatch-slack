@@ -410,27 +410,33 @@ var processEvent = function(event, context) {
   });
 };
 
-exports.handler = function(event, context) {
-  if (hookUrl) {
-    processEvent(event, context);
-  } else if (config.unencryptedHookUrl) {
-    hookUrl = config.unencryptedHookUrl;
-    processEvent(event, context);
-  } else if (config.kmsEncryptedHookUrl && config.kmsEncryptedHookUrl !== '<kmsEncryptedHookUrl>') {
-    var encryptedBuf = new Buffer(config.kmsEncryptedHookUrl, 'base64');
-    var cipherText = { CiphertextBlob: encryptedBuf };
-    var kms = new AWS.KMS();
+exports.config = config
 
-    kms.decrypt(cipherText, function(err, data) {
-      if (err) {
-        console.log("decrypt error: " + err);
-        processEvent(event, context);
-      } else {
-        hookUrl = "https://" + data.Plaintext.toString('ascii');
-        processEvent(event, context);
-      }
-    });
-  } else {
-    context.fail('hook url has not been set.');
-  }
-};
+exports.createHandler = function (config) {
+  return function (event, context) {
+    if (hookUrl) {
+      processEvent(event, context);
+    } else if (config.unencryptedHookUrl) {
+      hookUrl = config.unencryptedHookUrl;
+      processEvent(event, context);
+    } else if (config.kmsEncryptedHookUrl && config.kmsEncryptedHookUrl !== '<kmsEncryptedHookUrl>') {
+      var encryptedBuf = new Buffer(config.kmsEncryptedHookUrl, 'base64');
+      var cipherText = { CiphertextBlob: encryptedBuf };
+      var kms = new AWS.KMS();
+
+      kms.decrypt(cipherText, function (err, data) {
+        if (err) {
+          console.log("decrypt error: " + err);
+          processEvent(event, context);
+        } else {
+          hookUrl = "https://" + data.Plaintext.toString('ascii');
+          processEvent(event, context);
+        }
+      });
+    } else {
+      context.fail('hook url has not been set.');
+    }
+  };
+}
+
+exports.handler = exports.createHandler(config)
