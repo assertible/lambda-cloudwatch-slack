@@ -1,0 +1,18 @@
+{
+  "Records": [
+    {
+      "EventSource": "aws:sns",
+      "EventVersion": "1.0",
+      "EventSubscriptionArn": "arn:aws:sns:us-west-2:123456789123:CloudWatchNotifications:00000000-0000-0000-0000-000000000000",
+      "Sns": {
+        "Type": "Notification",
+        "MessageId": "00000000-0000-0000-0000-000000000000",
+        "TopicArn": "arn:aws:sns:us-west-2:123456789123:CloudWatchNotifications",
+        "Subject": null,
+        "Message": "{\"version\":\"0\",\"id\":\"790f94d1-41c7-859d-68af-7d040bc2ca9f\",\"detail-type\":\"ECS Task State Change\",\"source\":\"aws.ecs\",\"account\":\"000000000000\",\"time\":\"2019-09-19T13:25:44Z\",\"region\":\"us-east-1\",\"resources\":[\"arn:aws:ecs:us-east-1:000000000000:task/4097e8a3-3989-41d4-9494-81f97a2cb74d\"],\"detail\":{\"clusterArn\":\"arn:aws:ecs:us-east-1:000000000000:cluster/dev\",\"containerInstanceArn\":\"arn:aws:ecs:us-east-1:000000000000:container-instance/72609cd7-7211-4834-8120-b41c9d2234a9\",\"containers\":[{\"containerArn\":\"arn:aws:ecs:us-east-1:000000000000:container/dd3b6843-b5d1-401a-a319-6c8d8574017d\",\"exitCode\":137,\"lastStatus\":\"STOPPED\",\"name\":\"mycontainername\",\"runtimeId\":\"a01ca4d3390aae111d96e99d2759e346c5f3aed60560d4d8d2f9d4afa313a191\",\"taskArn\":\"arn:aws:ecs:us-east-1:000000000000:task/4097e8a3-3989-41d4-9494-81f97a2cb74d\",\"networkInterfaces\":[],\"cpu\":\"128\",\"memory\":\"128\"}],\"createdAt\":\"2019-09-19T13:19:41.935Z\",\"launchType\":\"EC2\",\"cpu\":\"128\",\"memory\":\"128\",\"desiredStatus\":\"STOPPED\",\"group\":\"service:mycontainername\",\"lastStatus\":\"STOPPED\",\"overrides\":{\"containerOverrides\":[{\"name\":\"mycontainername\"}]},\"attachments\":[],\"connectivity\":\"CONNECTED\",\"connectivityAt\":\"2019-09-19T13:19:41.935Z\",\"pullStartedAt\":\"2019-09-19T13:19:42.79Z\",\"startedAt\":\"2019-09-19T13:19:42.79Z\",\"startedBy\":\"ecs-svc/9223370467957936499\",\"stoppingAt\":\"2019-09-19T13:25:44.03Z\",\"stoppedAt\":\"2019-09-19T13:25:44.03Z\",\"pullStoppedAt\":\"2019-09-19T13:19:42.79Z\",\"executionStoppedAt\":\"2019-09-19T13:25:44Z\",\"stoppedReason\":\"Essential container in task exited\",\"stopCode\":\"EssentialContainerExited\",\"updatedAt\":\"2019-09-19T13:25:44.03Z\",\"taskArn\":\"arn:aws:ecs:us-east-1:000000000000:task/4097e8a3-3989-41d4-9494-81f97a2cb74d\",\"taskDefinitionArn\":\"arn:aws:ecs:us-east-1:000000000000:task-definition/mycontainername:3\",\"version\":3}}",
+        "Timestamp": "2019-09-19T13:25:44.297Z",
+        "MessageAttributes": {}
+      }
+    }
+  ]
+}

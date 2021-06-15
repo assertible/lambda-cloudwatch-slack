@@ -1,0 +1,18 @@
+{
+  "Records": [
+    {
+      "EventSource": "aws:sns",
+      "EventVersion": "1.0",
+      "EventSubscriptionArn": "arn:aws:sns:us-west-2:123456789123:CloudWatchNotifications:00000000-0000-0000-0000-000000000000",
+      "Sns": {
+        "Type": "Notification",
+        "MessageId": "00000000-0000-0000-0000-000000000000",
+        "TopicArn": "arn:aws:sns:us-west-2:123456789123:CloudWatchNotifications",
+        "Subject": null,
+        "Message": "{\"version\":\"0\",\"id\":\"5161328b-b6f8-c850-4e39-52e973dafd49\",\"detail-type\":\"ECS Task State Change\",\"source\":\"aws.ecs\",\"account\":\"000000000000\",\"time\":\"2019-09-19T13:26:12Z\",\"region\":\"us-east-1\",\"resources\":[\"arn:aws:ecs:us-east-1:000000000000:task/c08044ec-8b75-41ad-bdbb-8481e097fbae\"],\"detail\":{\"clusterArn\":\"arn:aws:ecs:us-east-1:000000000000:cluster/dev\",\"containerInstanceArn\":\"arn:aws:ecs:us-east-1:000000000000:container-instance/72609cd7-7211-4834-8120-b41c9d2234a9\",\"containers\":[{\"containerArn\":\"arn:aws:ecs:us-east-1:000000000000:container/b4d836b9-d9a1-4275-9536-b194b81d9930\",\"lastStatus\":\"PENDING\",\"name\":\"mycontainername\",\"taskArn\":\"arn:aws:ecs:us-east-1:000000000000:task/c08044ec-8b75-41ad-bdbb-8481e097fbae\",\"networkInterfaces\":[],\"cpu\":\"128\",\"memory\":\"128\"}],\"createdAt\":\"2019-09-19T13:26:12.237Z\",\"launchType\":\"EC2\",\"cpu\":\"128\",\"memory\":\"128\",\"desiredStatus\":\"RUNNING\",\"group\":\"service:mycontainername\",\"lastStatus\":\"PENDING\",\"overrides\":{\"containerOverrides\":[{\"name\":\"mycontainername\"}]},\"attachments\":[],\"startedBy\":\"ecs-svc/9223370467957936499\",\"updatedAt\":\"2019-09-19T13:26:12.237Z\",\"taskArn\":\"arn:aws:ecs:us-east-1:000000000000:task/c08044ec-8b75-41ad-bdbb-8481e097fbae\",\"taskDefinitionArn\":\"arn:aws:ecs:us-east-1:000000000000:task-definition/mycontainername:3\",\"version\":1}}",
+        "Timestamp": "2019-09-19T13:26:12.587Z",
+        "MessageAttributes": {}
+      }
+    }
+  ]
+}

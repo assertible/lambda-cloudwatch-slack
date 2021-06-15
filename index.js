@@ -194,7 +194,7 @@ var handleCodePipeline = function(event, context) {
 };
 
 var handleElasticache = function(event, context) {
-  var subject = "AWS ElastiCache Notification"
+  var subject = "AWS ElastiCache Notification";
   var message = JSON.parse(event.Records[0].Sns.Message);
   var timestamp = (new Date(event.Records[0].Sns.Timestamp)).getTime()/1000;
   var region = event.Records[0].EventSubscriptionArn.split(":")[3];
@@ -225,6 +225,56 @@ var handleElasticache = function(event, context) {
     ]
   };
   return _.merge(slackMessage, baseSlackMessage);
+};
+
+var handleCloudWatchEventECS = function(event, context) {
+  var timestamp = (new Date(event.Records[0].Sns.Timestamp)).getTime()/1000;
+  var message = JSON.parse(event.Records[0].Sns.Message);
+  var region = event.Records[0].EventSubscriptionArn.split(":")[3];
+  var subject = "AWS CloudWatch Notification";
+  var fields = [];
+
+
+  try {
+    message = JSON.parse(event.Records[0].Sns.Message);
+    const detailType = message['detail-type'];
+    const status = message.detail.lastStatus;
+
+    let color = "danger";
+
+    if (status === "RUNNING") {
+      color = "good";
+    } else if (status === "PENDING") {
+      color = "warning";
+    }
+
+    const container = message.detail.containers[0].name;
+    const stoppedReason = message.detail.stoppedReason;
+
+    fields.push({ "title": detailType, "value": "", "short": false });
+    fields.push({ "title": "Container", "value": container, "short": false });
+    fields.push({ "title": "Status", "value": status, "short": false });
+    if (stoppedReason) {
+      fields.push({ "title": "Reason", "value": stoppedReason, "short": false });
+    }
+
+    var slackMessage = {
+      text: "*" + subject + "*",
+      attachments: [
+        {
+          "color": color,
+          "fields": fields,
+          "ts": timestamp
+        }
+      ]
+    };
+
+    return _.merge(slackMessage, baseSlackMessage);
+  }
+  catch(e) {
+    console.log(e);
+    return handleCatchAll(event, context);
+  }
 };
 
 var handleCloudWatch = function(event, context) {
@@ -364,7 +414,7 @@ var processEvent = function(event, context) {
   try {
     eventSnsMessage = JSON.parse(eventSnsMessageRaw);
   }
-  catch (e) {    
+  catch (e) {
   }
 
   if(eventSubscriptionArn.indexOf(config.services.codepipeline.match_text) > -1 || eventSnsSubject.indexOf(config.services.codepipeline.match_text) > -1 || eventSnsMessageRaw.indexOf(config.services.codepipeline.match_text) > -1){
@@ -378,6 +428,10 @@ var processEvent = function(event, context) {
   else if(eventSnsMessage && 'AlarmName' in eventSnsMessage && 'AlarmDescription' in eventSnsMessage){
     console.log("processing cloudwatch notification");
     slackMessage = handleCloudWatch(event,context);
+  }
+  else if(eventSnsMessage && 'source' in eventSnsMessage && eventSnsMessage.source === 'aws.ecs'){
+    console.log("processing cloudwatch ECS event notification");
+    slackMessage = handleCloudWatchEventECS(event,context);
   }
   else if(eventSubscriptionArn.indexOf(config.services.codedeploy.match_text) > -1 || eventSnsSubject.indexOf(config.services.codedeploy.match_text) > -1 || eventSnsMessageRaw.indexOf(config.services.codedeploy.match_text) > -1){
     console.log("processing codedeploy notification");
