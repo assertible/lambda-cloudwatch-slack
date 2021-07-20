@@ -227,6 +227,42 @@ var handleElasticache = function(event, context) {
   return _.merge(slackMessage, baseSlackMessage);
 };
 
+var handleHealthCheck = function(event, context) {
+  var timestamp = (new Date(event.Records[0].Sns.Timestamp)).getTime()/1000;
+  var message = JSON.parse(event.Records[0].Sns.Message);
+  var region = event.Records[0].EventSubscriptionArn.split(":")[3];
+  var subject = "AWS CloudWatch Notification";
+  var alarmName = message.AlarmName;
+  var color = 'warning';
+  var customMessage = "Monitor is ";
+
+  if (message.NewStateValue === "ALARM") {
+      color = 'danger';
+      customMessage += "*DOWN*: ";
+  } else if (message.NewStateValue === "OK") {
+      color = 'good';
+      customMessage += "*UP*: ";
+  }
+  customMessage += alarmName.split("-awsroute53-")[0];
+
+  var slackMessage = {
+    text: "*" + subject + "*",
+    attachments: [
+      {
+        "title": alarmName,
+        "title_link": "https://console.aws.amazon.com/cloudwatch/home?region=" + region + "#alarm:alarmFilter=ANY;name=" + encodeURIComponent(alarmName),
+        "color": color,
+        "fields": [
+          { "value": customMessage, "short": false}
+        ],
+        "footer_icon": "https://d0.awsstatic.com/logos/Services/aws-icons_12_amazon-cloudwatch.png",
+        "ts":  timestamp
+      }
+    ]
+  };
+  return _.merge(slackMessage, baseSlackMessage);
+};
+
 var handleCloudWatch = function(event, context) {
   var timestamp = (new Date(event.Records[0].Sns.Timestamp)).getTime()/1000;
   var message = JSON.parse(event.Records[0].Sns.Message);
@@ -367,7 +403,11 @@ var processEvent = function(event, context) {
   catch (e) {    
   }
 
-  if(eventSubscriptionArn.indexOf(config.services.codepipeline.match_text) > -1 || eventSnsSubject.indexOf(config.services.codepipeline.match_text) > -1 || eventSnsMessageRaw.indexOf(config.services.codepipeline.match_text) > -1){
+  if(eventSubscriptionArn.indexOf(config.services.healthcheck.match_text) > -1 || eventSnsSubject.indexOf(config.services.healthcheck.match_text) > -1 || eventSnsMessageRaw.indexOf(config.services.healthcheck.match_text) > -1){
+    console.log("processing route53 healthcheck notification");
+    slackMessage = handleHealthCheck(event,context)
+  }
+  else if(eventSubscriptionArn.indexOf(config.services.codepipeline.match_text) > -1 || eventSnsSubject.indexOf(config.services.codepipeline.match_text) > -1 || eventSnsMessageRaw.indexOf(config.services.codepipeline.match_text) > -1){
     console.log("processing codepipeline notification");
     slackMessage = handleCodePipeline(event,context)
   }
