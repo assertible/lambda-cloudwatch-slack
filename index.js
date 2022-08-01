@@ -60,7 +60,7 @@ var handleCloudWatch = function (event, context) {
   }
 
   var slackMessage = {
-    text: ' @Volodymyr Bratashchuk',
+    text: '*' + subject + '*' + ' @Volodymyr Bratashchuk',
     link_names: true,
     attachments: [
       {
