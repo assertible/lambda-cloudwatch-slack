@@ -4,6 +4,7 @@ var https = require('https');
 var config = require('./config');
 var _ = require('lodash');
 var hookUrl;
+var { getResponsibleIds } = require('./services/get-responsible-ids');
 
 var baseSlackMessage = {};
 
@@ -52,54 +53,58 @@ var handleCloudWatch = function (event, context) {
   var alarmReason = message.NewStateReason;
   var trigger = message.Trigger;
   var color = 'warning';
+  var responibleIds;
 
-  if (message.NewStateValue === 'ALARM') {
-    color = 'danger';
-  } else if (message.NewStateValue === 'OK') {
-    color = 'good';
-  }
+  getResponsibleIds(alarmName.split(':')[0]).then((data) => {
+    responibleIds = data;
 
-  var slackMessage = {
-    text: '*' + subject + '*' + ' <@U01V8599QP4>',
-    attachments: [
-      {
-        color: color,
-        fields: [
-          { title: 'Alarm Name', value: alarmName, short: true },
-          { title: 'Alarm Description', value: alarmDescription, short: false },
-          {
-            title: 'Trigger',
-            value:
-              trigger.Statistic +
-              ' ' +
-              metricName +
-              ' ' +
-              trigger.ComparisonOperator +
-              ' ' +
-              trigger.Threshold +
-              ' for ' +
-              trigger.EvaluationPeriods +
-              ' period(s) of ' +
-              trigger.Period +
-              ' seconds.',
-            short: false,
-          },
-          { title: 'Responsible', value: '@Volodymyr Bratashchuk', short: false },
-          {
-            title: 'Link to Alarm',
-            value:
-              'https://console.aws.amazon.com/cloudwatch/home?region=' +
-              region +
-              '#alarm:alarmFilter=ANY;name=' +
-              encodeURIComponent(alarmName),
-            short: false,
-          },
-        ],
-        ts: timestamp,
-      },
-    ],
-  };
-  return _.merge(slackMessage, baseSlackMessage);
+    if (message.NewStateValue === 'ALARM') {
+      color = 'danger';
+    } else if (message.NewStateValue === 'OK') {
+      color = 'good';
+    }
+
+    var slackMessage = {
+      text: '*' + subject + '*' + responibleIds,
+      attachments: [
+        {
+          color: color,
+          fields: [
+            { title: 'Alarm Name', value: alarmName, short: true },
+            { title: 'Alarm Description', value: alarmDescription, short: false },
+            {
+              title: 'Trigger',
+              value:
+                trigger.Statistic +
+                ' ' +
+                metricName +
+                ' ' +
+                trigger.ComparisonOperator +
+                ' ' +
+                trigger.Threshold +
+                ' for ' +
+                trigger.EvaluationPeriods +
+                ' period(s) of ' +
+                trigger.Period +
+                ' seconds.',
+              short: false,
+            },
+            {
+              title: 'Link to Alarm',
+              value:
+                'https://console.aws.amazon.com/cloudwatch/home?region=' +
+                region +
+                '#alarm:alarmFilter=ANY;name=' +
+                encodeURIComponent(alarmName),
+              short: false,
+            },
+          ],
+          ts: timestamp,
+        },
+      ],
+    };
+    return _.merge(slackMessage, baseSlackMessage);
+  });
 };
 
 var handleAutoScaling = function (event, context) {

@@ -11,7 +11,7 @@
     "progress": "true"
   },
   "dependencies": {
-    "aws-sdk": "^2.4.0",
+    "aws-sdk": "^2.1185.0",
     "https": "^1.0.0",
     "lodash": "^4.15.0",
     "url": "^0.11.0"
