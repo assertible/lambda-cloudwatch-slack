@@ -24,7 +24,7 @@ module.exports = {
             if (err) {
               rej(err);
             } else {
-              res(JSON.parse(data.Body));
+              res(JSON.parse(data.json().Body));
             }
           }
         );
