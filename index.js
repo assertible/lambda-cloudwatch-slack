@@ -55,7 +55,7 @@ var handleCloudWatch = function (event, context) {
   var color = 'warning';
   var responibleIds;
 
-  getResponsibleIds(alarmName.split(':')[0]).then((data) => {
+  return getResponsibleIds(alarmName.split(':')[0]).then((data) => {
     responibleIds = data;
 
     if (message.NewStateValue === 'ALARM') {
