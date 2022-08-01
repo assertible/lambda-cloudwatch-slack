@@ -17,7 +17,7 @@
     "url": "^0.11.0"
   },
   "devDependencies": {
-    "node-lambda": "0.16.0"
+    "node-lambda": "^0.16.0"
   },
   "keywords": [
     "aws",
@@ -33,7 +33,7 @@
     "url": "https://github.com/assertible/lambda-cloudwatch-slack.git"
   },
   "scripts": {
-    "deploy": "./scripts/deploy.sh",
+    "deploy": "./scripts/deploy.bat",
     "test": "./scripts/test.sh"
   }
 }
