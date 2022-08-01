@@ -33,7 +33,7 @@
     "url": "https://github.com/assertible/lambda-cloudwatch-slack.git"
   },
   "scripts": {
-    "deploy": "./scripts/deploy.bat",
+    "deploy": "./scripts/deploy.sh",
     "test": "./scripts/test.sh"
   }
 }
