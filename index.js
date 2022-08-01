@@ -204,6 +204,7 @@ var processEvent = function (event, context) {
   } else if (eventSnsMessage && 'AlarmName' in eventSnsMessage && 'AlarmDescription' in eventSnsMessage) {
     console.log('processing cloudwatch notification');
     slackMessage = handleCloudWatch(event, context);
+    console.log({ slackMessage });
   } else if (
     eventSubscriptionArn.indexOf(config.services.codedeploy.match_text) > -1 ||
     eventSnsSubject.indexOf(config.services.codedeploy.match_text) > -1 ||
