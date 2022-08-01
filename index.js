@@ -298,7 +298,7 @@ var handleCloudWatch = function (event, context) {
               ' seconds.',
             short: false,
           },
-          { title: 'Responsible', value: '@Volodymyr Bratashchuk', short: false },
+          { title: 'Responsible', value: '@Volodymyr Bratashchuk', link_names: true, short: false },
           {
             title: 'Link to Alarm',
             value:
