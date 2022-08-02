@@ -28,9 +28,10 @@ module.exports = {
             }
           }
         );
-      } catch {
-        console.log('aws error');
-        rej(e);
+      } catch (e) {
+        console.log('aws error', e);
+        process.exit(0);
+        // rej(e);
       }
     });
   },
