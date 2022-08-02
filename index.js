@@ -107,36 +107,6 @@ var handleCloudWatch = function (event, context) {
   });
 };
 
-var handleAutoScaling = function (event, context) {
-  var subject = 'AWS AutoScaling Notification';
-  var message = JSON.parse(event.Records[0].Sns.Message);
-  var timestamp = new Date(event.Records[0].Sns.Timestamp).getTime() / 1000;
-  var eventname, nodename;
-  var color = 'good';
-
-  for (key in message) {
-    eventname = key;
-    nodename = message[key];
-    break;
-  }
-  var slackMessage = {
-    text: '*' + subject + '*',
-    attachments: [
-      {
-        color: color,
-        fields: [
-          { title: 'Message', value: event.Records[0].Sns.Subject, short: false },
-          { title: 'Description', value: message.Description, short: false },
-          { title: 'Event', value: message.Event, short: false },
-          { title: 'Cause', value: message.Cause, short: false },
-        ],
-        ts: timestamp,
-      },
-    ],
-  };
-  return _.merge(slackMessage, baseSlackMessage);
-};
-
 var handleCatchAll = function (event, context) {
   var record = event.Records[0];
   var subject = record.Sns.Subject;
@@ -175,7 +145,7 @@ var handleCatchAll = function (event, context) {
   return _.merge(slackMessage, baseSlackMessage);
 };
 
-var processEvent = function (event, context) {
+var processEvent = async function (event, context) {
   console.log('sns received:' + JSON.stringify(event, null, 2));
   var slackMessage = null;
   var eventSubscriptionArn = event.Records[0].EventSubscriptionArn;
@@ -187,45 +157,10 @@ var processEvent = function (event, context) {
     eventSnsMessage = JSON.parse(eventSnsMessageRaw);
   } catch (e) {}
 
-  if (
-    eventSubscriptionArn.indexOf(config.services.codepipeline.match_text) > -1 ||
-    eventSnsSubject.indexOf(config.services.codepipeline.match_text) > -1 ||
-    eventSnsMessageRaw.indexOf(config.services.codepipeline.match_text) > -1
-  ) {
-    console.log('processing codepipeline notification');
-    slackMessage = handleCodePipeline(event, context);
-  } else if (
-    eventSubscriptionArn.indexOf(config.services.elasticbeanstalk.match_text) > -1 ||
-    eventSnsSubject.indexOf(config.services.elasticbeanstalk.match_text) > -1 ||
-    eventSnsMessageRaw.indexOf(config.services.elasticbeanstalk.match_text) > -1
-  ) {
-    console.log('processing elasticbeanstalk notification');
-    slackMessage = handleElasticBeanstalk(event, context);
-  } else if (eventSnsMessage && 'AlarmName' in eventSnsMessage && 'AlarmDescription' in eventSnsMessage) {
+  if (eventSnsMessage && 'AlarmName' in eventSnsMessage && 'AlarmDescription' in eventSnsMessage) {
     console.log('processing cloudwatch notification');
-    slackMessage = handleCloudWatch(event, context);
+    slackMessage = await handleCloudWatch(event, context);
     console.log({ slackMessage });
-  } else if (
-    eventSubscriptionArn.indexOf(config.services.codedeploy.match_text) > -1 ||
-    eventSnsSubject.indexOf(config.services.codedeploy.match_text) > -1 ||
-    eventSnsMessageRaw.indexOf(config.services.codedeploy.match_text) > -1
-  ) {
-    console.log('processing codedeploy notification');
-    slackMessage = handleCodeDeploy(event, context);
-  } else if (
-    eventSubscriptionArn.indexOf(config.services.elasticache.match_text) > -1 ||
-    eventSnsSubject.indexOf(config.services.elasticache.match_text) > -1 ||
-    eventSnsMessageRaw.indexOf(config.services.elasticache.match_text) > -1
-  ) {
-    console.log('processing elasticache notification');
-    slackMessage = handleElasticache(event, context);
-  } else if (
-    eventSubscriptionArn.indexOf(config.services.autoscaling.match_text) > -1 ||
-    eventSnsSubject.indexOf(config.services.autoscaling.match_text) > -1 ||
-    eventSnsMessageRaw.indexOf(config.services.autoscaling.match_text) > -1
-  ) {
-    console.log('processing autoscaling notification');
-    slackMessage = handleAutoScaling(event, context);
   } else {
     slackMessage = handleCatchAll(event, context);
   }
