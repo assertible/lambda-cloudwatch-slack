@@ -23,15 +23,13 @@ module.exports = {
           (err, data) => {
             if (err) {
               console.log('aws error', err);
-              process.exit(0);
               rej(err);
             } else {
               res(JSON.parse(data.Body));
             }
           }
         );
-      } catch (e) {
-        console.log('aws error', e);
+      } catch {
         process.exit(0);
         // rej(e);
       }
