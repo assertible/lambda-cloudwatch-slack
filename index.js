@@ -160,7 +160,6 @@ var processEvent = async function (event, context) {
   if (eventSnsMessage && 'AlarmName' in eventSnsMessage && 'AlarmDescription' in eventSnsMessage) {
     console.log('processing cloudwatch notification');
     slackMessage = await handleCloudWatch(event, context);
-    console.log({ slackMessage });
   } else {
     slackMessage = handleCatchAll(event, context);
   }
