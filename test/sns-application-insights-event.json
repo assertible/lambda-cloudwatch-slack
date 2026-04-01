@@ -1,0 +1,18 @@
+{
+    "Records": [
+        {
+            "EventSource": "aws:sns",
+            "EventVersion": "1.0",
+            "EventSubscriptionArn": "arn:aws:sns:us-east-1:123456789123:SnsArn:00000000-0000-0000-0000-000000000000",
+            "Sns": {
+                "Type": "Notification",
+                "MessageId": "00000000-0000-0000-0000-000000000000",
+                "TopicArn": "arn:aws:sns:us-east-1:123456789123:SnsArn",
+                "Message": "You are receiving this email because Problem \"p-00000000-0000-0000-0000-000000000000\" has been CREATED by Amazon CloudWatch Application Insights\n\nProblem Details:\n\nProblem URL: https://console.aws.amazon.com/cloudwatch/home?region=us-east-1#settings:AppInsightsSettings/problemDetails?problemId=p-00000000-0000-0000-0000-000000000000\nProblem Summary: EC2: High CPU\nSeverity: MEDIUM\nInsights: High CPU on the application layer. This can result in application performance degradation due to high load on web servers, or application errors. If you experience high load conditions for long periods of time, use AWS Auto Scaling to add additional resources to process the load. To troubleshoot, collect a full user dump with task manager on the high CPU process and collect PerfMon logs with the thread counter to identify the thread ID causing high CPU.\nStatus: PENDING\nAffectedResource: arn:aws:ec2:us-east-1:123456789123:instance/i-0000000\nregion: us-east-1\nRecurringCount: \nStartTime: 2026-04-01T15:01:42.026Z\nLastUpdatedTime: 2026-04-01T15:01:51.297Z\nLastRecurrenceTime: \nStopTime: \n\n\nRecent Issues:\n- TelemetryArn:arn:aws:cloudwatch:us-east-1:123456789123:alarm:ApplicationInsights/ApplicationInsights-ContainerInsights/AWS/EC2/CPUUtilization/i-0000000/\n  StartTime:2026-04-01T15:01:42.026Z\n  StopTime:\n\n\n",
+                "Timestamp": "2026-04-01T15:01:51.732Z",
+                "Subject": "[CREATED] ApplicationInsights-ContainerInsights-EKS_CLUSTER-prod: EC2: High CPU",
+                "MessageAttributes": {}
+            }
+        }
+    ]
+}

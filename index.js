@@ -313,6 +313,29 @@ var handleAutoScaling = function(event, context) {
   return _.merge(slackMessage, baseSlackMessage);
 };
 
+var handleApplicationInsights = function(event, context) {
+  var timestamp = (new Date(event.Records[0].Sns.Timestamp)).getTime()/1000;
+  var subject = event.Records[0].Sns.Subject;
+  var message = event.Records[0].Sns.Message;
+
+  var slackMessage = {
+    text: "*Application Insights Has Detected A Problem*",
+    attachments: [
+      {
+        "fields": [
+          { "title": "Subject", "value": subject, "short": false},
+          { "title": "Message", "value": message, "short": false}
+        ],
+        "color": "danger",
+        "ts":  timestamp
+      }
+    ]
+  };
+
+  return _.merge(slackMessage, baseSlackMessage);
+};
+
+
 var handleCatchAll = function(event, context) {
 
     var record = event.Records[0]
@@ -392,6 +415,10 @@ var processEvent = function(event, context) {
   else if(eventSubscriptionArn.indexOf(config.services.autoscaling.match_text) > -1 || eventSnsSubject.indexOf(config.services.autoscaling.match_text) > -1 || eventSnsMessageRaw.indexOf(config.services.autoscaling.match_text) > -1){
     console.log("processing autoscaling notification");
     slackMessage = handleAutoScaling(event, context);
+  }
+  else if (eventSnsSubject.indexOf(config.services.applicationInsights.match_text) > -1)  {
+    console.log("processing application insights notification");
+    slackMessage = handleApplicationInsights(event, context);
   }
   else{
     slackMessage = handleCatchAll(event, context);
