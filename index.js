@@ -1,13 +1,22 @@
-var AWS = require('aws-sdk');
+const { KMSClient, DecryptCommand } = require('@aws-sdk/client-kms');
 var url = require('url');
 var https = require('https');
 var config = require('./config');
 var _ = require('lodash');
 var hookUrl;
 
+
+const DEBUG_LOGGING = process.env.DEBUG_LOGGING === 'true';
+function logDebug(...args) {
+  if (DEBUG_LOGGING) {
+    console.log('[DEBUG]', ...args);
+  }
+}
+
 var baseSlackMessage = {}
 
 var postMessage = function(message, callback) {
+  logDebug('Preparing to post message to Slack:', JSON.stringify(message));
   var body = JSON.stringify(message);
   var options = url.parse(hookUrl);
   options.method = 'POST';
@@ -16,14 +25,17 @@ var postMessage = function(message, callback) {
     'Content-Length': Buffer.byteLength(body),
   };
 
+  logDebug('HTTPS request options:', options);
   var postReq = https.request(options, function(res) {
     var chunks = [];
     res.setEncoding('utf8');
     res.on('data', function(chunk) {
+      logDebug('Received chunk from Slack response:', chunk);
       return chunks.push(chunk);
     });
     res.on('end', function() {
       var body = chunks.join('');
+      logDebug('Slack response ended. Status:', res.statusCode, res.statusMessage, 'Body:', body);
       if (callback) {
         callback({
           body: body,
@@ -35,11 +47,15 @@ var postMessage = function(message, callback) {
     return res;
   });
 
+  postReq.on('error', function(err) {
+    logDebug('Error posting to Slack:', err);
+  });
   postReq.write(body);
   postReq.end();
 };
 
 var handleElasticBeanstalk = function(event, context) {
+  logDebug('Handling ElasticBeanstalk event:', JSON.stringify(event));
   var timestamp = (new Date(event.Records[0].Sns.Timestamp)).getTime()/1000;
   var subject = event.Records[0].Sns.Subject || "AWS Elastic Beanstalk Notification";
   var message = event.Records[0].Sns.Message;
@@ -88,6 +104,7 @@ var handleElasticBeanstalk = function(event, context) {
 };
 
 var handleCodeDeploy = function(event, context) {
+  logDebug('Handling CodeDeploy event:', JSON.stringify(event));
   var subject = "AWS CodeDeploy Notification";
   var timestamp = (new Date(event.Records[0].Sns.Timestamp)).getTime()/1000;
   var snsSubject = event.Records[0].Sns.Subject;
@@ -135,6 +152,7 @@ var handleCodeDeploy = function(event, context) {
 };
 
 var handleCodePipeline = function(event, context) {
+  logDebug('Handling CodePipeline event:', JSON.stringify(event));
   var subject = "AWS CodePipeline Notification";
   var timestamp = (new Date(event.Records[0].Sns.Timestamp)).getTime()/1000;
   var snsSubject = event.Records[0].Sns.Subject;
@@ -194,6 +212,7 @@ var handleCodePipeline = function(event, context) {
 };
 
 var handleElasticache = function(event, context) {
+  logDebug('Handling Elasticache event:', JSON.stringify(event));
   var subject = "AWS ElastiCache Notification"
   var message = JSON.parse(event.Records[0].Sns.Message);
   var timestamp = (new Date(event.Records[0].Sns.Timestamp)).getTime()/1000;
@@ -228,6 +247,7 @@ var handleElasticache = function(event, context) {
 };
 
 var handleCloudWatch = function(event, context) {
+  logDebug('Handling CloudWatch event:', JSON.stringify(event));
   var timestamp = (new Date(event.Records[0].Sns.Timestamp)).getTime()/1000;
   var message = JSON.parse(event.Records[0].Sns.Message);
   var region = event.Records[0].EventSubscriptionArn.split(":")[3];
@@ -281,6 +301,7 @@ var handleCloudWatch = function(event, context) {
 };
 
 var handleAutoScaling = function(event, context) {
+  logDebug('Handling AutoScaling event:', JSON.stringify(event));
   var subject = "AWS AutoScaling Notification"
   var message = JSON.parse(event.Records[0].Sns.Message);
   var timestamp = (new Date(event.Records[0].Sns.Timestamp)).getTime()/1000;
@@ -312,6 +333,7 @@ var handleAutoScaling = function(event, context) {
 };
 
 var handleCatchAll = function(event, context) {
+  logDebug('Handling CatchAll event:', JSON.stringify(event));
 
     var record = event.Records[0]
     var subject = record.Sns.Subject
@@ -354,7 +376,7 @@ var handleCatchAll = function(event, context) {
 }
 
 var processEvent = function(event, context) {
-  console.log("sns received:" + JSON.stringify(event, null, 2));
+  logDebug('SNS event received:', JSON.stringify(event, null, 2));
   var slackMessage = null;
   var eventSubscriptionArn = event.Records[0].EventSubscriptionArn;
   var eventSnsSubject = event.Records[0].Sns.Subject || 'no subject';
@@ -363,74 +385,88 @@ var processEvent = function(event, context) {
 
   try {
     eventSnsMessage = JSON.parse(eventSnsMessageRaw);
+    logDebug('Parsed SNS message:', eventSnsMessage);
   }
-  catch (e) {    
+  catch (e) {
+    logDebug('Failed to parse SNS message as JSON:', eventSnsMessageRaw);
   }
 
   if(eventSubscriptionArn.indexOf(config.services.codepipeline.match_text) > -1 || eventSnsSubject.indexOf(config.services.codepipeline.match_text) > -1 || eventSnsMessageRaw.indexOf(config.services.codepipeline.match_text) > -1){
-    console.log("processing codepipeline notification");
+    logDebug('Processing codepipeline notification');
     slackMessage = handleCodePipeline(event,context)
   }
   else if(eventSubscriptionArn.indexOf(config.services.elasticbeanstalk.match_text) > -1 || eventSnsSubject.indexOf(config.services.elasticbeanstalk.match_text) > -1 || eventSnsMessageRaw.indexOf(config.services.elasticbeanstalk.match_text) > -1){
-    console.log("processing elasticbeanstalk notification");
+    logDebug('Processing elasticbeanstalk notification');
     slackMessage = handleElasticBeanstalk(event,context)
   }
   else if(eventSnsMessage && 'AlarmName' in eventSnsMessage && 'AlarmDescription' in eventSnsMessage){
-    console.log("processing cloudwatch notification");
+    logDebug('Processing cloudwatch notification');
     slackMessage = handleCloudWatch(event,context);
   }
   else if(eventSubscriptionArn.indexOf(config.services.codedeploy.match_text) > -1 || eventSnsSubject.indexOf(config.services.codedeploy.match_text) > -1 || eventSnsMessageRaw.indexOf(config.services.codedeploy.match_text) > -1){
-    console.log("processing codedeploy notification");
+    logDebug('Processing codedeploy notification');
     slackMessage = handleCodeDeploy(event,context);
   }
   else if(eventSubscriptionArn.indexOf(config.services.elasticache.match_text) > -1 || eventSnsSubject.indexOf(config.services.elasticache.match_text) > -1 || eventSnsMessageRaw.indexOf(config.services.elasticache.match_text) > -1){
-    console.log("processing elasticache notification");
+    logDebug('Processing elasticache notification');
     slackMessage = handleElasticache(event,context);
   }
   else if(eventSubscriptionArn.indexOf(config.services.autoscaling.match_text) > -1 || eventSnsSubject.indexOf(config.services.autoscaling.match_text) > -1 || eventSnsMessageRaw.indexOf(config.services.autoscaling.match_text) > -1){
-    console.log("processing autoscaling notification");
+    logDebug('Processing autoscaling notification');
     slackMessage = handleAutoScaling(event, context);
   }
   else{
+    logDebug('Processing catch-all notification');
     slackMessage = handleCatchAll(event, context);
   }
 
   postMessage(slackMessage, function(response) {
+    logDebug('Slack postMessage response:', response);
     if (response.statusCode < 400) {
-      console.info('message posted successfully');
+      logDebug('Message posted successfully');
       context.succeed();
     } else if (response.statusCode < 500) {
-      console.error("error posting message to slack API: " + response.statusCode + " - " + response.statusMessage);
+      logDebug('Error posting message to slack API:', response.statusCode, response.statusMessage);
       // Don't retry because the error is due to a problem with the request
       context.succeed();
     } else {
       // Let Lambda retry
+      logDebug('Server error when processing message:', response.statusCode, response.statusMessage);
       context.fail("server error when processing message: " + response.statusCode + " - " + response.statusMessage);
     }
   });
 };
 
-exports.handler = function(event, context) {
+exports.handler = async function(event, context) {
+  logDebug('Lambda handler invoked');
   if (hookUrl) {
+    logDebug('Using cached hookUrl');
     processEvent(event, context);
+    logDebug('Finished using cached hookUrl');
   } else if (config.unencryptedHookUrl) {
+    logDebug('Using unencryptedHookUrl from config');
     hookUrl = config.unencryptedHookUrl;
     processEvent(event, context);
+    logDebug('Finished using unencryptedHookUrl from config');
   } else if (config.kmsEncryptedHookUrl && config.kmsEncryptedHookUrl !== '<kmsEncryptedHookUrl>') {
-    var encryptedBuf = new Buffer(config.kmsEncryptedHookUrl, 'base64');
-    var cipherText = { CiphertextBlob: encryptedBuf };
-    var kms = new AWS.KMS();
-
-    kms.decrypt(cipherText, function(err, data) {
-      if (err) {
-        console.log("decrypt error: " + err);
-        processEvent(event, context);
-      } else {
-        hookUrl = "https://" + data.Plaintext.toString('ascii');
-        processEvent(event, context);
-      }
-    });
+    try {
+      logDebug('Decrypting KMS encrypted hook URL');
+      const encryptedBuf = Buffer.from(config.kmsEncryptedHookUrl, 'base64');
+      const kmsClient = new KMSClient();
+      const command = new DecryptCommand({ CiphertextBlob: encryptedBuf });
+      const data = await kmsClient.send(command);
+      logDebug('Decryption complete');
+      logDebug('Decrypted hookUrl:', data.Plaintext.toString('ascii'));
+      hookUrl = "https://" + data.Plaintext.toString('ascii');
+      logDebug('Processing event with decrypted hookUrl from config');
+      processEvent(event, context);
+      logDebug('Finished using decrypted hookUrl from config');
+    } catch (err) {
+      logDebug('Decrypt error:', err);
+      processEvent(event, context);
+    }
   } else {
+    logDebug('No hook URL set. Failing.');
     context.fail('hook url has not been set.');
   }
 };
