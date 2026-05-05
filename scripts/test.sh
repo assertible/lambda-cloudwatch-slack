@@ -5,6 +5,7 @@ $NODE_LAMBDA run -x test/context.json -j test/sns-codepipeline-event-stage-start
 $NODE_LAMBDA run -x test/context.json -j test/sns-codepipeline-event-stage-succeeded.json
 $NODE_LAMBDA run -x test/context.json -j test/sns-codepipeline-event-stage-failed.json
 $NODE_LAMBDA run -x test/context.json -j test/sns-cloudwatch-event.json
+$NODE_LAMBDA run -x test/context.json -j test/sns-cloudwatch-composite-event.json
 $NODE_LAMBDA run -x test/context.json -j test/sns-event.json
 $NODE_LAMBDA run -x test/context.json -j test/sns-elastic-beanstalk-event.json
 $NODE_LAMBDA run -x test/context.json -j test/sns-codedeploy-event.json

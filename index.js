@@ -253,12 +253,12 @@ var handleCloudWatch = function(event, context) {
   var region = event.Records[0].EventSubscriptionArn.split(":")[3];
   var subject = "AWS CloudWatch Notification";
   var alarmName = message.AlarmName;
-  var metricName = message.Trigger.MetricName;
   var oldState = message.OldStateValue;
   var newState = message.NewStateValue;
   var alarmDescription = message.AlarmDescription;
   var alarmReason = message.NewStateReason;
   var trigger = message.Trigger;
+  var triggeringChildren = message.TriggeringChildren || [] // for composite alarms
   var color = "warning";
 
   if (message.NewStateValue === "ALARM") {
@@ -266,6 +266,10 @@ var handleCloudWatch = function(event, context) {
   } else if (message.NewStateValue === "OK") {
       color = "good";
   }
+
+  var triggerMessage = trigger
+      ? `${trigger.Statistic} ${trigger.MetricName} ${trigger.ComparisonOperator} ${trigger.Threshold} for ${trigger.EvaluationPeriods} period(s) of ${trigger.Period} seconds.`
+      : triggeringChildren.map(it => it.Arn).join(" and ") + " transitioned to ALARM state."
 
   var slackMessage = {
     text: "*" + subject + "*",
@@ -275,16 +279,7 @@ var handleCloudWatch = function(event, context) {
         "fields": [
           { "title": "Alarm Name", "value": alarmName, "short": true },
           { "title": "Alarm Description", "value": alarmDescription, "short": false},
-          {
-            "title": "Trigger",
-            "value": trigger.Statistic + " "
-              + metricName + " "
-              + trigger.ComparisonOperator + " "
-              + trigger.Threshold + " for "
-              + trigger.EvaluationPeriods + " period(s) of "
-              + trigger.Period + " seconds.",
-              "short": false
-          },
+          { "title": "Trigger", "value": triggerMessage, "short": false },
           { "title": "Old State", "value": oldState, "short": true },
           { "title": "Current State", "value": newState, "short": true },
           {

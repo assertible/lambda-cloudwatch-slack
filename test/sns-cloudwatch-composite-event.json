@@ -1,0 +1,18 @@
+{
+  "Records": [
+    {
+      "EventSource": "aws:sns",
+      "EventVersion": "1.0",
+      "EventSubscriptionArn": "arn:aws:sns:us-west-2:123456789123:CloudWatchNotifications:00000000-0000-0000-0000-000000000000",
+      "Sns": {
+        "Type": "Notification",
+        "MessageId": "82728d9c-3a57-5c0f-b8f6-d730c5b86ba4",
+        "TopicArn": "arn:aws:sns:us-west-2:123456789123:CloudWatchNotifications",
+        "Timestamp": "2022-03-17T09:21:51.857Z",
+        "Subject": "ALARM: \"composite-alarm\" in US West - Oregon",
+        "Message": "{\"AlarmName\":\"composite-alarm\",\"AlarmDescription\":\"A composite alarm.\",\"AWSAccountId\":\"123456789123\",\"NewStateValue\":\"ALARM\",\"NewStateReason\":\"arn:aws:cloudwatch:us-west-2:123456789123:alarm:Alarm1 transitioned to ALARM at Thursday 17 March, 2022 09:21:51 UTC\",\"StateChangeTime\":\"2022-03-17T09:21:51.792+0000\",\"Region\":\"US West - Oregon\",\"AlarmArn\":\"arn:aws:cloudwatch:us-west-2:123456789123:alarm:composite-alarm\",\"OKActions\":[\"arn:aws:sns:us-west-2:123456789123:topic\"],\"AlarmActions\":[\"arn:aws:sns:us-west-2:123456789123:topic\"],\"InsufficientDataActions\":[],\"OldStateValue\":\"OK\",\"AlarmRule\":\"ALARM(\\\"Alarm1\\\") AND ALARM(\\\"Alarm2\\\")\",\"TriggeringChildren\":[{\"Arn\":\"arn:aws:cloudwatch:us-west-2:123456789123:alarm:Alarm1\",\"State\":{\"Value\":\"ALARM\",\"Timestamp\":\"2022-03-17T09:21:51.792+0000\"}},{\"Arn\":\"arn:aws:cloudwatch:us-west-2:123456789123:alarm:Alarm2\",\"State\":{\"Value\":\"ALARM\",\"Timestamp\":\"2022-03-17T09:21:37.874+0000\"}}]}",
+        "MessageAttributes": {}
+      }
+    }
+  ]
+}
